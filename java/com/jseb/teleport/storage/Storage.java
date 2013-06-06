@@ -25,8 +25,8 @@ public class Storage {
 	public Map<Player, Location> deathLocations;
 
 	private File homeFile;
-    private File areaFile;
-    private Teleport plugin;
+	private File areaFile;
+	private Teleport plugin;
 
 	public Storage(Teleport plugin, String filePath) {
 		this.back = new HashMap<Player, Location>(); 
@@ -276,8 +276,8 @@ public class Storage {
 	            br.write("y: " + location.getY() + "\n");
 	            br.write("z: " + location.getZ() + "\n");
 	            br.write("yaw: " + location.getYaw() + "\n");
-		        br.write("pitch: " + location.getPitch() + "\n");
-		        br.write("permission: " + area.getPermission() + "\n");
+	            br.write("pitch: " + location.getPitch() + "\n");
+	            br.write("permission: " + area.getPermission() + "\n");
 	            br.flush();
 	   		}
 
