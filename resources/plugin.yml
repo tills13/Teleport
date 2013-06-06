@@ -1,0 +1,33 @@
+name: Teleport
+main: com.jseb.teleport.Teleport
+version: 1.9
+author: tills13
+
+commands:
+  spawn:
+    description: teleport to spawn
+    usage: /<command>
+  back:
+    description: teleport to previous location
+    usage: /<command>
+  home:
+    description: /<command> [set <name> | teleport <name> | remove <name> | rename <name> <new name> | <player> <name> | list]
+    usage: ''
+  accept:
+    description: authorize teleportation to your home or person
+    usage: '/<command>'
+  deny:
+    description: deny teleportation to your home or person
+    usage: '/<command>'
+  teleport:
+    description: teleport to another player
+    usage: '/<command> <player>'
+  area:
+    description: teleport to an area
+    usage: '/<command> <area name> or /<command> list'
+  death:
+    description: teleport to where you died
+    usage: '/<command>'
+  config:
+    description: reload the config file
+    usage: '/<command> reload'

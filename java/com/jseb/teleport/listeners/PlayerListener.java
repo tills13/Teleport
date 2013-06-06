@@ -1,0 +1,33 @@
+package com.jseb.teleport.listeners;
+
+import com.jseb.teleport.Teleport;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.entity.Player;
+
+public class PlayerListener implements Listener {
+	public Teleport plugin;
+
+	public PlayerListener(Teleport plugin) {
+		this.plugin = plugin;
+	}
+
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		Player player = event.getPlayer();
+		if ((player.hasPermission("teleport.update.notify")) && (plugin.getUpdater().notify) && (plugin.getSettings().notifyUpdate)) {
+			player.sendMessage(plugin.title + "an update for this plugin is available on bukkitdev");
+		}
+	}
+
+	@EventHandler
+	public void onEntityDeath(PlayerDeathEvent event) {
+		Player player = event.getEntity();
+		if (player.hasPermission("teleport.death")) {
+			this.plugin.getStorage().deathLocations.put(player, player.getLocation());
+			player.sendMessage(plugin.title + "saving your location, use [/death] to return");
+		}
+	}
+}
