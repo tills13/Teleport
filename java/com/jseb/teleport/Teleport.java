@@ -1,5 +1,6 @@
 package com.jseb.teleport;
 
+import com.jseb.teleport.Language;
 import com.jseb.teleport.commands.*;
 import com.jseb.teleport.storage.Storage;
 import com.jseb.teleport.listeners.PlayerListener;
@@ -32,6 +33,8 @@ public class Teleport extends JavaPlugin {
 		storage = new Storage(this, filePath);
 		settings = new Config(filePath, getConfig(), this);
 		updater = new Updater(this);
+		Language.setPlugin(this);
+		Language.reload();
 
 		init();
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this); // register event listener

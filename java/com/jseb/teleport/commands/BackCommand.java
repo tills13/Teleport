@@ -2,6 +2,7 @@ package com.jseb.teleport.commands;
 
 import com.jseb.teleport.Teleport;
 import com.jseb.teleport.TeleportHelper;
+import com.jseb.teleport.Language;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

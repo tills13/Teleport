@@ -82,7 +82,7 @@ public class Config {
 		this.projectName = config.getString("donttouch.projectname", "teleport-home");
 		this.lang = config.getString("language.language", "en");
 
-		this.areaEnabled = config.getBoolean("components.updatenotify", true);
+		this.areaEnabled = config.getBoolean("components.areaenabled", true);
 		this.homeEnabled = config.getBoolean("components.homeenabled", true);
 		this.deathEnabled = config.getBoolean("components.deathenabled", true);
 		this.spawnEnabled = config.getBoolean("components.spawnenabled", true);

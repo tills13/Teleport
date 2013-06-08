@@ -1,6 +1,8 @@
 package com.jseb.teleport.commands;
 
 import com.jseb.teleport.Teleport;
+import com.jseb.teleport.Language;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,15 +19,15 @@ public class ConfigCommand implements CommandExecutor {
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!sender.hasPermission("teleport.config")) {
-			sender.sendMessage(plugin.title + "you do not have the required permission.");
+			sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 			return true;
     	}
 
     	if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
     		plugin.getSettings().refreshConfig();
-    		sender.sendMessage(plugin.title + "config reloaded");
+    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("general.config.reload"));
     	} else {
-    		sender.sendMessage(plugin.title + "syntax: [/config reload]");
+    		sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("general.syntax"), "[/config reload]"));
     	}
 
 		return true;

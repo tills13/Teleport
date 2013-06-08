@@ -1,6 +1,8 @@
 package com.jseb.teleport.listeners;
 
 import com.jseb.teleport.Teleport;
+import com.jseb.teleport.Language;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -18,7 +20,7 @@ public class PlayerListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if ((player.hasPermission("teleport.update.notify")) && (plugin.getUpdater().notify) && (plugin.getSettings().notifyUpdate)) {
-			player.sendMessage(plugin.title + "an update for this plugin is available on bukkitdev");
+			player.sendMessage(Language.getString("plugin.title") + "an update for this plugin is available on bukkitdev");
 		}
 	}
 
@@ -27,7 +29,7 @@ public class PlayerListener implements Listener {
 		Player player = event.getEntity();
 		if (player.hasPermission("teleport.death")) {
 			this.plugin.getStorage().deathLocations.put(player, player.getLocation());
-			player.sendMessage(plugin.title + "saving your location, use [/death] to return");
+			player.sendMessage(Language.getString("plugin.title") + "saving your location, use [/death] to return");
 		}
 	}
 }

@@ -2,6 +2,7 @@ package com.jseb.teleport.commands;
 
 import com.jseb.teleport.Teleport;
 import com.jseb.teleport.storage.Home;
+import com.jseb.teleport.Language;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -28,7 +29,7 @@ public class DenyCommand implements CommandExecutor {
     	Player player = (Player) sender;
 
 		if (!player.hasPermission("teleport.accept")) {
-			player.sendMessage(plugin.title + "you do not have the required permission.");
+			player.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
 			return true;
     	}
 
@@ -36,15 +37,15 @@ public class DenyCommand implements CommandExecutor {
 			Map<Player, Home> target = plugin.getStorage().homeAccept.remove(player);
 			Player receiver = (Player)target.keySet().toArray()[0];
 
-			receiver.sendMessage(plugin.title + "teleport request denied");
-			player.sendMessage(plugin.title + "denied " + receiver.getName()  + "'s teleport request");
+			receiver.sendMessage(Language.getString("plugin.title") + "teleport request denied");
+			player.sendMessage(Language.getString("plugin.title") + "denied " + receiver.getName()  + "'s teleport request");
 		} else if (plugin.getStorage().playerAccept.containsKey(player)) {
 			Player requester = plugin.getStorage().playerAccept.remove(player);
 
-			requester.sendMessage(plugin.title + "teleport request denied");
-			player.sendMessage(plugin.title + "denied " + requester.getName()  + "'s teleport request");
+			requester.sendMessage(Language.getString("plugin.title") + "teleport request denied");
+			player.sendMessage(Language.getString("plugin.title") + "denied " + requester.getName()  + "'s teleport request");
 		} else {
-			player.sendMessage(plugin.title + "no pending teleports");
+			player.sendMessage(Language.getString("plugin.title") + "no pending teleports");
 		}
 
 		return true;
