@@ -2,6 +2,7 @@ package com.jseb.teleport.commands;
 
 import com.jseb.teleport.Teleport;
 import com.jseb.teleport.storage.Storage;
+import com.jseb.teleport.storage.Request;
 import com.jseb.teleport.Language;
 
 import org.bukkit.ChatColor;
@@ -32,7 +33,7 @@ public class TeleportCommand implements CommandExecutor {
 			helpSyntax(sender);
 		} else {
 			if (!(sender instanceof Player)) {
-	    		sender.sendMessage("Only players can execute this command.");
+	    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 	    		return true;
 	    	}
 
@@ -48,10 +49,7 @@ public class TeleportCommand implements CommandExecutor {
 				player.sendMessage(Language.getString("plugin.title") + "cannot find player " + args[0]);
 				return true;
 			} else {
-				player.sendMessage(Language.getString("plugin.title") + "waiting for authorization...");
-				target.sendMessage(Language.getString("plugin.title") + player.getName() + " wishes to teleport to your location");
-				target.sendMessage(Language.getString("plugin.title") + "type /accept to allow or /deny to deny");
-				storage.playerAccept.put(target, player);
+				new Request(player, target);
 			}
 		}
 

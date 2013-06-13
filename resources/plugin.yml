@@ -31,3 +31,9 @@ commands:
   config:
     description: reload the config file
     usage: '/<command> reload'
+  bed: 
+    description: teleport to your bed location
+    usage: '/<command>'
+  request: 
+    description: manage requests
+    usage: '/<command>'

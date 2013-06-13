@@ -26,19 +26,19 @@ public class SpawnCommand implements CommandExecutor {
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if (!plugin.getSettings().spawnEnabled) {
-            sender.sendMessage(Language.getString("plugin.title") + "this feature has been disabled");
+            sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
             return true;
         }
 
     	if (!(sender instanceof Player)) {
-    		sender.sendMessage("Only players can execute this command.");
+    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
     		return true;
     	}
 
     	Player player = (Player) sender;
 
     	if (!player.hasPermission("teleport.spawn")) {
-			player.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
+			player.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 			return true;
     	}
 
@@ -62,7 +62,7 @@ public class SpawnCommand implements CommandExecutor {
 			if (!block.getType().equals(Material.AIR)) {
 				while(!block.getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
 					if (count++ > 100) { 
-						player.sendMessage(Language.getString("plugin.title") + "something went wrong :(");
+						player.sendMessage(Language.getString("plugin.title") + Language.getString("error.general"));
 						return true;
 					}
 					block = block.getRelative(BlockFace.UP);
@@ -71,7 +71,7 @@ public class SpawnCommand implements CommandExecutor {
 				count = 0; 
 				while(block.getRelative(BlockFace.DOWN).getType().equals(Material.AIR)) {
 					if (count++ > 100) { 
-						player.sendMessage(Language.getString("plugin.title") + "something went wrong :(");
+						player.sendMessage(Language.getString("plugin.title") + Language.getString("error.general"));
 						return true;
 					}
 					block = block.getRelative(BlockFace.DOWN);
@@ -81,13 +81,13 @@ public class SpawnCommand implements CommandExecutor {
 			location = block.getLocation();
 			plugin.getStorage().back.put(player, player.getLocation());
 
-			player.sendMessage(Language.getString("plugin.title") + "teleporting to spawn");
+			player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("general.teleport"), "spawn"));
 			TeleportHelper.loadChunkAt(location);
 	        player.teleport(location);
     	} else if (args.length == 1) {
     		if (args[0].equalsIgnoreCase("set")) {
     			if (!player.hasPermission("teleport.spawn.set")) {
-					player.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
+					player.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 					return true;
     			}
 
@@ -95,7 +95,7 @@ public class SpawnCommand implements CommandExecutor {
     			int x = (int)location.getX();
     			int y = (int)location.getY();
     			int z = (int)location.getZ();
-    			player.sendMessage(Language.getString("plugin.title") + "setting spawn location (" + x + ", " + y + ", " + z + ")");
+    			player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("spawn.setspawn"),  ("(" + x + ", " + y + ", " + z + ")")));
     			location.getWorld().setSpawnLocation(x, y, z); 
     		} else {
     			helpSyntax(player);
@@ -108,8 +108,8 @@ public class SpawnCommand implements CommandExecutor {
     }
 
     public void helpSyntax(CommandSender player) {
-    	player.sendMessage(Language.getString("plugin.title") + "[/spawn] " + ChatColor.WHITE + "commands syntax: ");
-    	if (player.hasPermission("teleport.spawn")) player.sendMessage(Language.getString("plugin.title") + "[/spawn] " + ChatColor.WHITE + "teleports to spawn");
-    	if (player.hasPermission("teleport.spawn.set")) player.sendMessage(Language.getString("plugin.title") + "[/spawn set] " + ChatColor.WHITE + "sets the spawn location for the current world");
+    	player.sendMessage(Language.getString("plugin.title") + "[/spawn] " + Language.getString("general.commandhelp.title"));
+    	if (player.hasPermission("teleport.spawn")) player.sendMessage(Language.getString("plugin.title") + "[/spawn] " + ChatColor.WHITE + Language.getString("spawn.help.spawn"));
+    	if (player.hasPermission("teleport.spawn.set")) player.sendMessage(Language.getString("plugin.title") + "[/spawn set] " + ChatColor.WHITE + Language.getString("spawn.help.setspawn"));
     }
 }

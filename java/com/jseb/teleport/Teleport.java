@@ -3,6 +3,7 @@ package com.jseb.teleport;
 import com.jseb.teleport.Language;
 import com.jseb.teleport.commands.*;
 import com.jseb.teleport.storage.Storage;
+import com.jseb.teleport.storage.Request;
 import com.jseb.teleport.listeners.PlayerListener;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,9 +19,7 @@ public class Teleport extends JavaPlugin {
 	private Updater updater;
     private Config settings;
     private Storage storage;
-
-    public String title = "[" + ChatColor.RED + "TH" + ChatColor.WHITE + "] " + ChatColor.GREEN;
-
+    
 	public void onEnable() {
 
 		File baseDirectory = this.getDataFolder();
@@ -35,6 +34,7 @@ public class Teleport extends JavaPlugin {
 		updater = new Updater(this);
 		Language.setPlugin(this);
 		Language.reload();
+		Request.setPlugin(this);
 
 		init();
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this); // register event listener
@@ -63,12 +63,14 @@ public class Teleport extends JavaPlugin {
 	public void init() {
 		getCommand("home").setExecutor(new HomeCommand(this));
 		getCommand("spawn").setExecutor(new SpawnCommand(this));
-        getCommand("accept").setExecutor(new AcceptCommand(this));
-        getCommand("deny").setExecutor(new DenyCommand(this));
+        getCommand("accept").setExecutor(new RequestReplyCommand(this));
+        getCommand("deny").setExecutor(new RequestReplyCommand(this));
+        getCommand("request").setExecutor(new RequestReplyCommand(this));
         getCommand("back").setExecutor(new BackCommand(this));
         getCommand("teleport").setExecutor(new TeleportCommand(this));
         getCommand("area").setExecutor(new AreaCommand(this)); 
         getCommand("config").setExecutor(new ConfigCommand(this));
         getCommand("death").setExecutor(new DeathCommand(this));
+        getCommand("bed").setExecutor(new BedCommand(this));
 	}
 }

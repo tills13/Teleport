@@ -1,13 +1,15 @@
-plugin.title: [&cTH&f] 
+plugin.title: [&cTH&f] &a
 
 #general
 general.waitforauth: waiting for authorization...
+general.teleport: teleporting to %s
 general.teleport.help: type [/accept] to allow or [/deny] to deny
 general.teleport.request: %s wishes to teleport to %s
 general.config.reload: config. reloaded
 general.updateavail: an update for this plugin is available on bukkitdev
 general.deathlocsave: saving your location, use [/death] to return
 general.syntax: syntax: %s
+general.commandhelp.title: &fcommand syntax: 
 
 #errors
 error.general: something went wrong :(
@@ -17,14 +19,15 @@ error.permissiondenied: you do not have the required permission
 error.featuredisabled: this feature have been disabled
 error.unknownargument: unknown argument: %s
 error.playermustbeonline: the player must be online
-error.playernotfound: could not find player: %s
+error.playernotfound: could not find player: &f%s
 error.area.permission: you do not have the required permission: %s
 error.area.noareassaved: no areas saved
 error.area.nosucharea: no area named %d
+error.area.permission: you do not have the required permission: &f%s
 error.back.nolocation: no previous location saved
 error.death.nolocation: something went wrong saving your location
 error.home.maxhomes: maximum of %d homes on this server
-error.home.list.console: try %s
+error.home.list.help: try %s
 error.home.nosuchhome: no home named: %s
 error.home.nosuchhome.other: %s has no home named: %s
 error.home.nohomessaved.other: no homes saved for %s
@@ -32,11 +35,13 @@ error.home.nohomessaved: no homes saved
 error.home.nodefaulthome: no default home saved
 error.home.nodefaulthome.other: no default home saved for %s
 error.home.homenotfound: home not found
+error.bed.bednotfound: bed not found (may have been broken)
+error.request.norequests: no requests pending
+error.request.multiplerequests: multiple requests pending
+error.request.requestnotfound: no pending requests from that player
 
 #teleport
-#player's name, player's home name
 teleport.otherhome.player: teleporting to %s's home <%s>
-#owner's name, owner's home name
 teleport.otherhome.owner: teleporting %s to your home <%s>
 teleport.spawn: teleporting to spawn
 teleport.player.player: teleporting to %s
@@ -45,21 +50,20 @@ teleport.nopendingteleports: no pending teleports
 teleport.request.denied.player: teleport request denied
 teleport.request.denied.target: denied %s's teleport request
 
-
 #areas
 area.teleport: teleporting to %s
 area.update.location: updated %s's location
 area.update.permission: updated permissions for %s
-area.locationandpermission.update: updated %s's location, permissions
-area.addlocation: added area: %s
-area.addlocationandpermission: added area: %s with permission %s
+area.update.locationandpermission: updated %s's location, permissions
+area.addlocation: added area: &f%s
+area.addlocationandpermission: added area: &f%s&a with permission &f%s
 area.remove: removed %s
-area.remove: %s renamed to %s
-area.list.title: Areas: [Page %d of %d]
-area.info.about: about
-area.info.location: location
-area.info.author: author
-area.info.permission: permission
+area.rename: %s renamed to %s
+area.list.title: Areas: [Page &f%d&a of &f%d&a]
+area.info.about: about: &f%s
+area.info.location: location: &f%s
+area.info.author: author: &f%s
+area.info.permission: permission: &f%s
 area.help.set: sets a new area, optional permission requirement
 area.help.setperms: sets area permissions
 area.help.remove: removes an area
@@ -87,7 +91,6 @@ home.help.list: shows your or another player's homes
 home.help.player: teleports to someone else's homes
 
 #teleport
-teleport.toplayer: %s wishes to teleport to your location
 teleport.help.player: teleports to a player
 teleport.help.death: teleports to death location
 teleport.help.spawn: teleports to spawn
@@ -96,10 +99,16 @@ teleport.help.config: reloads config file
 teleport.help.accept: accept/deny teleport requests
 teleport.help.general: help with other commands
 
+#requests
+requests.list.title: %s pending requests:
+
+#bed
+bed.teleport: teleporting to bed location
+
 #back
 back.teleport: teleporting back
 
 #spawn
-spawn.setspawn: setting spawn location %s
-spawn.help.spawn: teleprots to spawn
+spawn.setspawn: setting spawn location &f%s
+spawn.help.spawn: teleports to spawn
 spawn.help.setspawn: sets the spawn location for the current world

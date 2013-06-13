@@ -118,7 +118,6 @@ public class Home {
 				}
 			}
 		}
-		System.out.println("null");
 		return null;
 	}
 
@@ -132,7 +131,6 @@ public class Home {
 				}
 			}
 		}
-
 		return null;
 	}
 
@@ -141,7 +139,7 @@ public class Home {
 	}
 
 	public static int numHomes(Player owner) {
-		List<Home> list = Home.homeList.get(owner.getName());
+		List<Home> list = Home.homeList.get(owner.getName().toLowerCase());
 		return list == null ? 0 : list.size();
 	}
 }

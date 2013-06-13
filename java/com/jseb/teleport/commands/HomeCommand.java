@@ -2,6 +2,7 @@ package com.jseb.teleport.commands;
 
 import com.jseb.teleport.Teleport;
 import com.jseb.teleport.storage.Home;
+import com.jseb.teleport.storage.Request;
 import com.jseb.teleport.Language;
 
 import org.bukkit.ChatColor;
@@ -40,7 +41,7 @@ public class HomeCommand implements CommandExecutor {
 					sender.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
 					return true;
 		    	} else if (!(sender instanceof Player)) {
-		    		sender.sendMessage(Language.getString("plugin.title") + "Only players can execute this command.");
+		    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 		    		return true;
 		    	}
 
@@ -74,7 +75,7 @@ public class HomeCommand implements CommandExecutor {
 				}
 			} else if (args[0].equalsIgnoreCase("setdefault")) {
 				if (!(sender instanceof Player)) {
-		    		sender.sendMessage(Language.getString("plugin.title") + "Only players can execute this command.");
+		    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 		    		return true;
 		    	}
 
@@ -102,7 +103,7 @@ public class HomeCommand implements CommandExecutor {
 					sender.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
 					return true;
 		    	} else if (!(sender instanceof Player)) {
-		    		sender.sendMessage(Language.getString("plugin.title") + "Only players can execute this command.");
+		    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 		    		return true;
 		    	}
 
@@ -125,7 +126,7 @@ public class HomeCommand implements CommandExecutor {
 					sender.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
 					return true;
 		    	} else if (!(sender instanceof Player)) {
-		    		sender.sendMessage(Language.getString("plugin.title") + "Only players can execute this command.");
+		    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 		    		return true;
 		    	}
 
@@ -162,7 +163,7 @@ public class HomeCommand implements CommandExecutor {
 				}
 			} else if (args[0].equalsIgnoreCase("rename")) {
 				if (!(sender instanceof Player)) {
-		    		sender.sendMessage(Language.getString("plugin.title") + "Only players can execute this command.");
+		    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 		    		return true;
 		    	}
 
@@ -187,8 +188,8 @@ public class HomeCommand implements CommandExecutor {
 			} else if (args[0].equalsIgnoreCase("list")) {
 				if (args.length == 1) {
 					if (!(sender instanceof Player)) {
-			    		sender.sendMessage(Language.getString("plugin.title") + "Only players can execute this command.");
-			    		sender.sendMessage(Language.getString("plugin.title") + "try [/home list <player name>]");
+			    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
+			    		sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.home.list.help"), "[/home list <player name>]"));
 			    		return true;
 			    	}
 
@@ -216,18 +217,22 @@ public class HomeCommand implements CommandExecutor {
 						return true;
 			    	}
 
-	    			Player p = plugin.getServer().getPlayer(args[1]);
+	    			Player p = plugin.getServer().getPlayer(args[1].toLowerCase());
 	    			List<Home> list;
 
 	    			if (p == null) {
-	    				list = Home.getHomes(args[1]);
+	    				list = Home.getHomes(args[1].toLowerCase());
 	    				if (list == null) {
 	    					sender.sendMessage(Language.getString("plugin.title") + "no homes saved for " + args[1]);
 	    					return true;
 	    				}
 	    			} else {
-	    				list = Home.getHomes(p.getName());
-	    				args[1] = p.getName();
+	    				list = Home.getHomes(p.getName().toLowerCase());
+	    				if (list == null) {
+	    					sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.home.nohomessaved.other"), p.getName()));
+	    					return true;
+	    				}
+	    				args[1] = p.getName().toLowerCase();
 	    			}
 
 					sender.sendMessage(Language.getString("plugin.title") + args[1] + "'s homes: ");
@@ -245,7 +250,7 @@ public class HomeCommand implements CommandExecutor {
 					sender.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
 					return true;
 		    	} else if (!(sender instanceof Player)) {
-		    		sender.sendMessage(Language.getString("plugin.title") + "Only players can execute this command.");
+		    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 		    		return true;
 		    	}
 
@@ -286,13 +291,7 @@ public class HomeCommand implements CommandExecutor {
 						}
 					}
 
-					player.sendMessage(Language.getString("plugin.title") + "waiting for authorization...");
-					receiver.sendMessage(Language.getString("plugin.title") + player.getName() + " wishes to teleport to " + home.getName());
-					receiver.sendMessage(Language.getString("plugin.title") + "type /accept to allow or /deny to deny");
-					Map<Player, Home> map = new HashMap<Player, Home>();
-					map.put(player, home);
-					plugin.getStorage().homeAccept.put(receiver, map);
-
+					new Request(receiver, home);
 				}
 			} else {
 				sender.sendMessage(Language.getString("plugin.title") + "invalid argument");
@@ -308,7 +307,7 @@ public class HomeCommand implements CommandExecutor {
     public void helpSyntax(CommandSender player) {
     	player.sendMessage(Language.getString("plugin.title") + "[/home] " + ChatColor.WHITE + "commands syntax: ");
     	if (player.hasPermission("teleport.sethome")) player.sendMessage(Language.getString("plugin.title") + "[/home set <name> <default>] " + ChatColor.WHITE + "sets a new home/optionally default");
-    	if (player.hasPermission("teleport.sethome")) player.sendMessage(Language.getString("plugin.title") + "[/home setdeafult <name>] " + ChatColor.WHITE + "sets home as default");
+    	if (player.hasPermission("teleport.sethome")) player.sendMessage(Language.getString("plugin.title") + "[/home setdefault <name>] " + ChatColor.WHITE + "sets home as default");
     	if (player.hasPermission("teleport.sethome")) player.sendMessage(Language.getString("plugin.title") + "[/home remove <name>] " + ChatColor.WHITE + "removes a home");
     	if (player.hasPermission("teleport.sethome")) player.sendMessage(Language.getString("plugin.title") + "[/home rename <name> <new name>] " + ChatColor.WHITE + "renames a home to <new name>");
     	if (player.hasPermission("teleport.teleport")) player.sendMessage(Language.getString("plugin.title") + "[/home teleport <name>] " + ChatColor.WHITE + "teleports to one of your homes");

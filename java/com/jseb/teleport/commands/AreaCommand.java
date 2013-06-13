@@ -23,7 +23,7 @@ public class AreaCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!plugin.getSettings().areaEnabled) {
-            sender.sendMessage(Language.getString("plugin.title") + "this feature has been disabled");
+            sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
             return true;
         }
 
@@ -49,11 +49,11 @@ public class AreaCommand implements CommandExecutor {
                 }
 
                 if (Area.numAreas() == 0) {
-                    sender.sendMessage(Language.getString("plugin.title") + "no areas saved");
+                    sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.noareassaved"));
                     return true;
                 }
 
-                sender.sendMessage(Language.getString("plugin.title") + "Areas: [Page " + page + " of " + (int)Math.ceil(Area.numAreas() / 5.0) + "]");
+                sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.list.title"), page, (int)Math.ceil(Area.numAreas() / 5.0)));
 
                 int j = 0;
                 for (int i = ((page - 1) * 5); i < end; i++) {
@@ -68,72 +68,72 @@ public class AreaCommand implements CommandExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("teleport")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage("Only players can execute this command.");
+                    sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
                     return true;
                 }
 
                 player = (Player) sender;
 
                 if (args.length == 1) {
-                    player.sendMessage(Language.getString("plugin.title") + "syntax: [/area teleport <name>]");
+                    player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("general.syntax"), "[/area teleport <name>]"));
                 } else {
                     Area area = Area.getArea(args[1]);
 
                     if (area == null && Area.numAreas() != 0) {
-                        player.sendMessage(Language.getString("plugin.title") + "no area named " + args[1]);
+                        player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.nosucharea"), args[1]));
                         return true;
                     } else if (Area.numAreas() == 0) {
-                        player.sendMessage(Language.getString("plugin.title") + "no areas saved");
+                        player.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.noareassaved"));
                         return true;
                     }
 
                     plugin.getStorage().back.put(player, player.getLocation());
                     if (area.teleportTo(player)) {
-                        player.sendMessage(Language.getString("plugin.title") + "teleporting to " + area.getName());
+                        player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.teleport"), area.getName()));
                     } else {
-                        player.sendMessage(Language.getString("plugin.title") + "you do not have the required permission: " + area.getPermissionString());
+                        player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.permission"), area.getPermissionString()));
                     }
                     
                 }
             } else if (args[0].equalsIgnoreCase("set")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage("Only players can execute this command.");
+                    sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
                     return true;
                 }
 
                 player = (Player) sender;
                 if (!player.hasPermission("teleport.area.set")) {
-                    player.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
+                    player.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
                     return true;
                 }
 
                 if (args.length == 1) {
-                    player.sendMessage(Language.getString("plugin.title") + "syntax: [/area set <name>]");
+                    player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("general.syntax"), "[/area set <name>]"));
                 } else if (args.length == 2) {
                     Area area = Area.getArea(args[1]);
                     
                     if (area != null) {
-                        player.sendMessage(Language.getString("plugin.title") + "updated " + args[1] + "\'s location");
+                        player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.update.location"), args[1]));
                         area.setLocation(player.getLocation());
                     } else {
-                        player.sendMessage(Language.getString("plugin.title") + "added area: " + ChatColor.WHITE + args[1]);
+                        player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.addlocation"), args[1]));
                         new Area(args[1], player.getLocation(), player.getName());
                     }
                 } else if (args.length == 3) {
                     Area area = Area.getArea(args[1]);
                     
                     if (area != null) {
-                        player.sendMessage(Language.getString("plugin.title") + "updated " + args[1] + "\'s location, permissions");
+                        player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.update.locationandpermission"), args[1]));
                         area.setLocation(player.getLocation());
                         area.setPermissions(Boolean.parseBoolean(args[2]));
                     } else {
                         area = new Area(args[1], player.getLocation(), player.getName(), Boolean.parseBoolean(args[2]));
-                        player.sendMessage(Language.getString("plugin.title") + "added area: " + ChatColor.WHITE + args[1] + ChatColor.GREEN + " with permission " + ChatColor.WHITE + area.getPermissionString());
+                        player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.addlocationandpermission"), args[1], area.getPermissionString()));
                     }
                 }
             } else if (args[0].equalsIgnoreCase("setperms")) {
                 if (!sender.hasPermission("teleport.area.setperms")) {
-                    sender.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
+                    sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
                     return true;
                 }
 
@@ -141,61 +141,61 @@ public class AreaCommand implements CommandExecutor {
                     Area area = Area.getArea(args[1]);
 
                     if (area == null && Area.numAreas() != 0) {
-                        sender.sendMessage(Language.getString("plugin.title") + "no area named " + args[1]);
+                        sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.nosucharea"), args[1]));
                         return true;
                     } else if (Area.numAreas() == 0) {
-                        sender.sendMessage(Language.getString("plugin.title") + "no areas saved");
+                        sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.noareassaved"));
                         return true;
                     }
 
-                    sender.sendMessage(Language.getString("plugin.title") + "updated permissions for " + area.getName());
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.update.permission"), area.getName()));
                     area.setPermissions(Boolean.parseBoolean(args[2]));
                 } else {
                     helpSyntax(sender);
                 }
             } else if (args[0].equalsIgnoreCase("remove")) {
                 if (!sender.hasPermission("teleport.area.remove")) {
-                    sender.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
+                    sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
                     return true;
                 }
 
                 if (args.length == 1) {
-                    sender.sendMessage(Language.getString("plugin.title") + "syntax: [/area remove <name>]");
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("general.syntax"), "[/area remove <name>]"));
                 } else {
                     Area area = Area.getArea(args[1]);
 
                     if (area == null && Area.numAreas() != 0) {
-                        sender.sendMessage(Language.getString("plugin.title") + "no area named " + args[1]);
+                        sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.nosucharea"), args[1]));
                         return true;
                     } else if (Area.numAreas() == 0) {
-                        sender.sendMessage(Language.getString("plugin.title") + "no areas saved");
+                        sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.noareassaved"));
                         return true;
                     } 
 
                     area.delete();
-                    sender.sendMessage(Language.getString("plugin.title") + "removed " + args[1]);
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.remove"), args[1]));
                 }
             } else if (args[0].equalsIgnoreCase("rename")) {
                 if (!sender.hasPermission("teleport.area.rename")) {
-                    sender.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
+                    sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
                     return true;
                 }
 
                 if (args.length != 3) {
-                    sender.sendMessage(Language.getString("plugin.title") + "syntax: [/area rename <name> <new name>]");
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("general.syntax"), "[/area rename <name> <new name>]"));
                 } else {
                     Area area = Area.getArea(args[1]);
 
                     if (area == null && Area.numAreas() != 0) {
-                        sender.sendMessage(Language.getString("plugin.title") + "no area named " + args[1]);
+                        sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.nosucharea"), args[1]));
                         return true;
                     } else if (Area.numAreas() == 0) {
-                        sender.sendMessage(Language.getString("plugin.title") + "no areas saved");
+                        sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.noareassaved"));
                         return true;
                     } 
 
                     area.rename(args[2]);
-                    sender.sendMessage(Language.getString("plugin.title") + args[1] + " renamed to " + args[2]);
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.rename"), args[1], args[2]));
                 }
             } else if (args[0].equalsIgnoreCase("info")) {
                 if (args.length == 1) {
@@ -204,17 +204,17 @@ public class AreaCommand implements CommandExecutor {
                     Area area = Area.getArea(args[1]);
 
                     if (area == null && Area.numAreas() != 0) {
-                        sender.sendMessage(Language.getString("plugin.title") + "no area named " + args[1]);
+                        sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.nosucharea"), args[1]));
                         return true;
                     } else if (Area.numAreas() == 0) {
-                        sender.sendMessage(Language.getString("plugin.title") + "no areas saved");
+                        sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.noareassaved"));
                         return true;
                     } 
 
-                    sender.sendMessage(Language.getString("plugin.title") + "about: " + ChatColor.WHITE + area.getName());
-                    sender.sendMessage(Language.getString("plugin.title") + "location: " + (area.canTeleportTo(sender) : ChatColor.WHITE + area.getLocationString() ? "(protected)"));
-                    sender.sendMessage(Language.getString("plugin.title") + "author: " + ChatColor.WHITE + area.getAuthor());
-                    sender.sendMessage(Language.getString("plugin.title") + "permission: " + ChatColor.WHITE + area.getPermissionString());
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.about"), area.getName()));
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.location"), (area.canTeleportTo(sender) ? area.getLocationString() : "(protected)")));
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.author"), area.getAuthor()));
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.permission"), area.getPermissionString()));
                 } else {
 
                 }
@@ -227,11 +227,11 @@ public class AreaCommand implements CommandExecutor {
 
     public void helpSyntax(CommandSender player) {
         player.sendMessage(Language.getString("plugin.title") + "[/area] " + ChatColor.WHITE + "commands syntax: ");
-        if (player.hasPermission("teleport.area.set")) player.sendMessage(Language.getString("plugin.title") + "[/area set <name> <bool>] " + ChatColor.WHITE + "sets a new area, optional permission requirement");
-        if (player.hasPermission("teleport.area.setperms")) player.sendMessage(Language.getString("plugin.title") + "[/area setperms <name> <bool>] " + ChatColor.WHITE + "sets area permissions");
-        if (player.hasPermission("teleport.area.remove")) player.sendMessage(Language.getString("plugin.title") + "[/area remove <name>] " + ChatColor.WHITE + "removes an area");
-        if (player.hasPermission("teleport.area.rename")) player.sendMessage(Language.getString("plugin.title") + "[/area rename <name> <new name>] " + ChatColor.WHITE + "renames an area to <new name>");
-        if (player.hasPermission("teleport.area.teleport")) player.sendMessage(Language.getString("plugin.title") + "[/area teleport <name>] " + ChatColor.WHITE + "teleports to an area");
-        player.sendMessage(Language.getString("plugin.title") + "[/area list <name>] " + ChatColor.WHITE + "lists areas");
+        if (player.hasPermission("teleport.area.set")) player.sendMessage(Language.getString("plugin.title") + "[/area set <name> <bool>] " + ChatColor.WHITE + Language.getString("area.help.set"));
+        if (player.hasPermission("teleport.area.setperms")) player.sendMessage(Language.getString("plugin.title") + "[/area setperms <name> <bool>] " + ChatColor.WHITE + Language.getString("area.help.setperms"));
+        if (player.hasPermission("teleport.area.remove")) player.sendMessage(Language.getString("plugin.title") + "[/area remove <name>] " + ChatColor.WHITE + Language.getString("area.help.remove"));
+        if (player.hasPermission("teleport.area.rename")) player.sendMessage(Language.getString("plugin.title") + "[/area rename <name> <new name>] " + ChatColor.WHITE + Language.getString("area.help.rename"));
+        if (player.hasPermission("teleport.area.teleport")) player.sendMessage(Language.getString("plugin.title") + "[/area teleport <name>] " + ChatColor.WHITE + Language.getString("area.help.teleport"));
+        player.sendMessage(Language.getString("plugin.title") + "[/area list <name>] " + ChatColor.WHITE + Language.getString("area.help.list"));
     }
 }

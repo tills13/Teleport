@@ -21,19 +21,19 @@ public class BackCommand implements CommandExecutor {
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if (!plugin.getSettings().backEnabled) {
-            sender.sendMessage(plugin.title + "this feature has been disabled");
+            sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
             return true;
         }
 
     	if (!(sender instanceof Player)) {
-    		sender.sendMessage("Only players can execute this command.");
+    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
     		return true;
     	}
 
     	Player player = (Player) sender;
 
     	if (!player.hasPermission("teleport.back")) {
-			player.sendMessage(plugin.title + "you do not have the required permission.");
+			player.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 			return true;
     	}
 
@@ -41,9 +41,9 @@ public class BackCommand implements CommandExecutor {
 			Location location = plugin.getStorage().back.get(player);
 			TeleportHelper.loadChunkAt(location);
 			player.teleport(location);
-			player.sendMessage(plugin.title + "teleporting back");
+			player.sendMessage(Language.getString("plugin.title") + Language.getString("back.teleport"));
 		} else {
-			player.sendMessage(plugin.title + "no previous location saved");
+			player.sendMessage(Language.getString("plugin.title") + Language.getString("error.back.nolocation"));
 		}
 
 		return true;
