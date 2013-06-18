@@ -1,5 +1,7 @@
 package com.jseb.teleport;
 
+import com.jseb.teleport.Language;
+
 import org.bukkit.scheduler.BukkitRunnable;
  	
 import java.net.HttpURLConnection;
@@ -67,12 +69,12 @@ public class Updater extends BukkitRunnable {
 					try {
 						return Double.parseDouble(matcher.group(1));
 					} catch (IllegalStateException e) {
-						System.out.println("[Teleport] something went wrong checking for updates :(");
+						System.out.println("[Teleport] " + Language.getString("error.updater.check"));
 					}
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("[Teleport] something went wrong checking for updates :(");
+			System.out.println("[Teleport] " + Language.getString("error.updater.check"));
 		}
 
 		return 0;

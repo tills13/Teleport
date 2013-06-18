@@ -25,7 +25,7 @@ public class TeleportCommand implements CommandExecutor {
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if (!plugin.getSettings().playerTeleEnabled) {
-            sender.sendMessage(Language.getString("plugin.title") + "this feature has been disabled");
+            sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
             return true;
         }
 
@@ -40,13 +40,14 @@ public class TeleportCommand implements CommandExecutor {
 	    	Player player = (Player) sender;
 
 			if (!player.hasPermission("teleport.player")) {
-				player.sendMessage(Language.getString("plugin.title") + "you do not have the required permission.");
+				player.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 				return true;
 	    	}
 
 			Player target = plugin.getServer().getPlayer(args[0]);
 			if (target == null) {
-				player.sendMessage(Language.getString("plugin.title") + "cannot find player " + args[0]);
+				player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.playernotfound"), args[0]));
+				player.sendMessage(Language.getString("plugin.title") + Language.getString("error.playermustbeonline"));
 				return true;
 			} else {
 				new Request(player, target);
@@ -57,13 +58,13 @@ public class TeleportCommand implements CommandExecutor {
     }
 
     public void helpSyntax(CommandSender player) {
-        player.sendMessage(Language.getString("plugin.title") + ChatColor.WHITE + "command syntax: ");
-        if (player.hasPermission("teleport.player")) player.sendMessage(Language.getString("plugin.title") + "[/teleport <player>] " + ChatColor.WHITE + "teleports to a player");
-        if (player.hasPermission("teleport.death")) player.sendMessage(Language.getString("plugin.title") + "[/death] " + ChatColor.WHITE + "teleports to death location");
-        if (player.hasPermission("teleport.spawn")) player.sendMessage(Language.getString("plugin.title") + "[/spawn] " + ChatColor.WHITE + "teleports to spawn");
-        if (player.hasPermission("teleport.back")) player.sendMessage(Language.getString("plugin.title") + "[/back] " + ChatColor.WHITE + "teleports to previous location");
-        if (player.hasPermission("teleport.config")) player.sendMessage(Language.getString("plugin.title") + "[/config reload] " + ChatColor.WHITE + "reloads config file");
-        if (player.hasPermission("teleport.accept")) player.sendMessage(Language.getString("plugin.title") + "[/accept] and [/deny] " + ChatColor.WHITE + "accept/deny teleport requests");
-        player.sendMessage(Language.getString("plugin.title") + "[/home] and [/area] " + ChatColor.WHITE + "help with other commands");
+        player.sendMessage(Language.getString("plugin.title") + Language.getString("general.commandhelp.title"));
+        if (player.hasPermission("teleport.player")) player.sendMessage(Language.getString("plugin.title") + "[/teleport <player>] " + ChatColor.WHITE + Language.getString("teleport.help.player"));
+        if (player.hasPermission("teleport.death")) player.sendMessage(Language.getString("plugin.title") + "[/death] " + ChatColor.WHITE + Language.getString("teleport.help.death"));
+        if (player.hasPermission("teleport.spawn")) player.sendMessage(Language.getString("plugin.title") + "[/spawn] " + ChatColor.WHITE + Language.getString("teleport.help.spawn"));
+        if (player.hasPermission("teleport.back")) player.sendMessage(Language.getString("plugin.title") + "[/back] " + ChatColor.WHITE + Language.getString("teleport.help.back"));
+        if (player.hasPermission("teleport.config")) player.sendMessage(Language.getString("plugin.title") + "[/config reload] " + ChatColor.WHITE + Language.getString("teleport.help.config"));
+        if (player.hasPermission("teleport.accept")) player.sendMessage(Language.getString("plugin.title") + "[/accept] and [/deny] " + ChatColor.WHITE + Language.getString("teleport.help.accept"));
+        player.sendMessage(Language.getString("plugin.title") + "[/home] and [/area] " + ChatColor.WHITE + Language.getString("teleport.help.general"));
     }
 }

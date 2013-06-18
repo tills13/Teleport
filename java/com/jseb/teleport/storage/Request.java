@@ -1,3 +1,9 @@
+/* 
+ *
+ * 
+ *
+ */ 
+
 package com.jseb.teleport.storage;
 
 import com.jseb.teleport.Teleport;
@@ -16,16 +22,15 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Request {
-	//public static final int TYPE_HOME = 1;
-	//public static final int TYPE_PLAYER = 2;
-
 	public static Teleport plugin;
 	public static Map<String, List<Request>> requests;
+	public long requestTime;
 	public Player requester;
 	public Player target;
 	public Object destination;
 
 	public Request(Player player, Object destination) {
+		this.requestTime = System.currentTimeMillis();
 		this.requester = player;
 		this.destination = destination;
 		if (this.destination instanceof Player) this.target = (Player) this.destination;
@@ -42,7 +47,7 @@ public class Request {
 
 	public void notifyPlayers() {
 		requester.sendMessage(Language.getString("plugin.title") + Language.getString("general.waitforauth"));
-		String targetLocation = destination instanceof Home ? ((Home) destination).getName() : "your location";
+		String targetLocation = destination instanceof Home ? ((Home) destination).getName() : Language.getString("requests.yourlocation");
 		target.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("general.teleport.request"), requester.getName(), targetLocation));
 		target.sendMessage(Language.getString("plugin.title") + Language.getString("general.teleport.help"));
 	}
@@ -74,6 +79,18 @@ public class Request {
 		target.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.request.denied.target"), requester.getName()));
 
 		removeRequest();
+	}
+
+	public Player getRequester() {
+		return this.requester;
+	}
+
+	public Player getTarget() {
+		return this.target;
+	}
+
+	public Object getDestination() {
+		return this.destination;
 	}
 
 	public void removeRequest() {

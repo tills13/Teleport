@@ -28,11 +28,11 @@ public class Storage {
 	private File areaFile;
 	private Teleport plugin;
 
-	public Storage(Teleport plugin, String filePath) {
+	public Storage(Teleport plugin) {
 		this.back = new HashMap<Player, Location>(); 
-		this.homeAccept = new HashMap<Player, Map<Player, Home>>();
-		this.playerAccept = new HashMap<Player, Player>();
 		this.deathLocations = new HashMap<Player, Location>();
+		//possibly create directory (plugin.getDataFolder()) if it doesn't already exist.
+		String filePath = plugin.getDataFolder().getAbsolutePath();
 
 		this.plugin = plugin;
 

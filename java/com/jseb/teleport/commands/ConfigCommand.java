@@ -25,6 +25,7 @@ public class ConfigCommand implements CommandExecutor {
 
     	if (args.length == 1 && args[0].equalsIgnoreCase("reload")) {
     		plugin.getSettings().refreshConfig();
+    		Language.reload();
     		sender.sendMessage(Language.getString("plugin.title") + Language.getString("general.config.reload"));
     	} else {
     		sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("general.syntax"), "[/config reload]"));

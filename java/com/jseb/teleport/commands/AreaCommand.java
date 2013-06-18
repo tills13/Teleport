@@ -43,9 +43,8 @@ public class AreaCommand implements CommandExecutor {
 
                     }
 
-                    if (page > Math.ceil(Area.numAreas() / 5.0)) {
-                        page = (int)Math.ceil(Area.numAreas() / 5.0);
-                    }
+                    if (page > Math.ceil(Area.numAreas() / 5.0)) page = (int)Math.ceil(Area.numAreas() / 5.0);
+                    else if (page <= 0) page = 1;
                 }
 
                 if (Area.numAreas() == 0) {
@@ -212,7 +211,7 @@ public class AreaCommand implements CommandExecutor {
                     } 
 
                     sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.about"), area.getName()));
-                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.location"), (area.canTeleportTo(sender) ? area.getLocationString() : "(protected)")));
+                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.location"), (area.canTeleportTo(sender) ? area.getLocationString() : Language.getString("area.info.protected"))));
                     sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.author"), area.getAuthor()));
                     sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.info.permission"), area.getPermissionString()));
                 } else {
@@ -226,12 +225,13 @@ public class AreaCommand implements CommandExecutor {
     }   
 
     public void helpSyntax(CommandSender player) {
-        player.sendMessage(Language.getString("plugin.title") + "[/area] " + ChatColor.WHITE + "commands syntax: ");
+        player.sendMessage(Language.getString("plugin.title") + "[/area] " + Language.getString("general.commandhelp.title"));
         if (player.hasPermission("teleport.area.set")) player.sendMessage(Language.getString("plugin.title") + "[/area set <name> <bool>] " + ChatColor.WHITE + Language.getString("area.help.set"));
         if (player.hasPermission("teleport.area.setperms")) player.sendMessage(Language.getString("plugin.title") + "[/area setperms <name> <bool>] " + ChatColor.WHITE + Language.getString("area.help.setperms"));
         if (player.hasPermission("teleport.area.remove")) player.sendMessage(Language.getString("plugin.title") + "[/area remove <name>] " + ChatColor.WHITE + Language.getString("area.help.remove"));
         if (player.hasPermission("teleport.area.rename")) player.sendMessage(Language.getString("plugin.title") + "[/area rename <name> <new name>] " + ChatColor.WHITE + Language.getString("area.help.rename"));
         if (player.hasPermission("teleport.area.teleport")) player.sendMessage(Language.getString("plugin.title") + "[/area teleport <name>] " + ChatColor.WHITE + Language.getString("area.help.teleport"));
-        player.sendMessage(Language.getString("plugin.title") + "[/area list <name>] " + ChatColor.WHITE + Language.getString("area.help.list"));
+        player.sendMessage(Language.getString("plugin.title") + "[/area list <page num>] " + ChatColor.WHITE + Language.getString("area.help.list"));
+        player.sendMessage(Language.getString("plugin.title") + "[/home] and [/teleport] " + ChatColor.WHITE + Language.getString("teleport.help.general"));
     }
 }

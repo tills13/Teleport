@@ -19,6 +19,11 @@ public class BedCommand implements CommandExecutor {
 
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    	if (!plugin.getSettings().bedEnabled) {
+            sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
+            return true;
+        }
+
     	if (!(sender instanceof Player)) {
     		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
     		return true;

@@ -21,16 +21,8 @@ public class Teleport extends JavaPlugin {
     private Storage storage;
     
 	public void onEnable() {
-
-		File baseDirectory = this.getDataFolder();
-		String filePath = baseDirectory.getAbsolutePath();
-
-		if (!baseDirectory.exists()){
-			baseDirectory.mkdirs();
-		}
-
-		storage = new Storage(this, filePath);
-		settings = new Config(filePath, getConfig(), this);
+		storage = new Storage(this);
+		settings = new Config(getConfig(), this);
 		updater = new Updater(this);
 		Language.setPlugin(this);
 		Language.reload();

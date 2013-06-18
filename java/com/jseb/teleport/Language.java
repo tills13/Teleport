@@ -30,7 +30,7 @@ public class Language {
 					} catch (StringIndexOutOfBoundsException e) {
 						continue;
 					}
-				} while (!value.equals(title));
+				} while (!value.equalsIgnoreCase(title));
 			} catch (IOException e) {
 				reload();
 				return getString(title);
@@ -38,9 +38,13 @@ public class Language {
 
 			return string == null ? null : ChatColor.translateAlternateColorCodes('&', string.substring(string.indexOf(":") + 2, string.length()));
 		} else {
-			return stringList.get(title);
+			return ChatColor.translateAlternateColorCodes('&', stringList.get(title.toLowerCase()));
 		}
 	}
+
+	/*public static String getFormattedString(String title, Object ... args) {
+		String.format(getString(title), args);
+	}*/
 
 	public static void load() {
 		BufferedReader reader;
@@ -49,10 +53,10 @@ public class Language {
 
 		try {
 			reader = new BufferedReader(new FileReader(langFile));
-			string = reader.readLine();
+			string = reader.readLine().toLowerCase();
 			while (string != null) {
-				if (string.startsWith("#")) continue;
-				stringList.put(string.substring(0, string.indexOf(":")), string.substring(string.indexOf(":") + 2, string.length()));
+				if (string.indexOf(":") > 0) stringList.put(string.substring(0, string.indexOf(":")), string.substring(string.indexOf(":") + 2, string.length()));
+				string = reader.readLine().toLowerCase();
 			} 
 		} catch (IOException e) {
 			reload();
@@ -66,6 +70,7 @@ public class Language {
 	public static void reload() {
 		langFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + plugin.getSettings().lang + ".lang");
 
+		if (plugin.getSettings().cacheLanguage) load();
 		if (!langFile.exists()) {
 			System.out.println("[Teleport] language file not found, aborting");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
