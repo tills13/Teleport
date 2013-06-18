@@ -16,24 +16,24 @@ error.general: something went wrong :(
 error.updater.check: something went wrong checking for updates
 error.playersonly: only players can execute this command
 error.permissiondenied: you do not have the required permission
-error.featuredisabled: this feature have been disabled
-error.unknownargument: unknown argument: %s
+error.featuredisabled: this feature has been disabled
+error.unknownargument: unknown argument: &f%s
 error.playermustbeonline: the player must be online
-error.playernotfound: could not find player: &f%s
+error.playernotfound: could not find player &f%s
 error.area.permission: you do not have the required permission: %s
 error.area.noareassaved: no areas saved
-error.area.nosucharea: no area named %d
+error.area.nosucharea: no area named&f %s
 error.area.permission: you do not have the required permission: &f%s
 error.back.nolocation: no previous location saved
 error.death.nolocation: something went wrong saving your location
 error.home.maxhomes: maximum of %d homes on this server
 error.home.list.help: try %s
-error.home.nosuchhome: no home named: %s
-error.home.nosuchhome.other: %s has no home named: %s
-error.home.nohomessaved.other: no homes saved for %s
+error.home.nosuchhome: no home named &f%s
+error.home.nosuchhome.other: %s has no home named &f%s
+error.home.nohomessaved.other: no homes saved for &f%s
 error.home.nohomessaved: no homes saved
 error.home.nodefaulthome: no default home saved
-error.home.nodefaulthome.other: no default home saved for %s
+error.home.nodefaulthome.other: no default home saved for &f%s
 error.home.homenotfound: home not found
 error.bed.bednotfound: bed not found (may have been broken)
 error.request.norequests: no requests pending
@@ -44,21 +44,21 @@ error.request.requestnotfound: no pending requests from that player
 teleport.otherhome.player: teleporting to %s's home <%s>
 teleport.otherhome.owner: teleporting %s to your home <%s>
 teleport.spawn: teleporting to spawn
-teleport.player.player: teleporting to %s
-teleport.player.target: teleporting %s to you
+teleport.player.player: teleporting to &f%s
+teleport.player.target: teleporting &f%s&a to you
 teleport.nopendingteleports: no pending teleports
 teleport.request.denied.player: teleport request denied
 teleport.request.denied.target: denied %s's teleport request
 
 #areas
-area.teleport: teleporting to %s
+area.teleport: teleporting to &f%s
 area.update.location: updated %s's location
-area.update.permission: updated permissions for %s
+area.update.permission: updated permissions for &f%s
 area.update.locationandpermission: updated %s's location, permissions
 area.addlocation: added area: &f%s
 area.addlocationandpermission: added area: &f%s&a with permission &f%s
-area.remove: removed %s
-area.rename: %s renamed to %s
+area.remove: removed &f%s
+area.rename: &f%s&a renamed to &f%s&a
 area.list.title: Areas: [Page &f%d&a of &f%d&a]
 area.info.about: about: &f%s
 area.info.location: location: &f%s
@@ -76,14 +76,14 @@ home.default.saved: default home location saved
 home.location.update: updated %s's location
 home.location.saved: home location saved
 home.newdefault: %s is now your default home
-home.remove: removed %s
-home.rename: %s renamed to %s
+home.remove: removed &f%s
+home.rename: &f%s&a renamed to &f%s&a
 home.teleport: teleporting to %s
 home.list.title.self: my homes
 home.list.title.other: %s's homes
 home.list.isdefault: (default)
 home.help.set: sets a new home/optionally default
-home.help.setdeafult: sets home as default
+home.help.setdefault: sets home as default
 home.help.remove: removes a home
 home.help.rename: renames a home to <new name>
 home.help.teleport: teleports to one of your homes
@@ -101,6 +101,7 @@ teleport.help.general: help with other commands
 
 #requests
 requests.list.title: %s pending requests:
+requests.yourlocation: your location
 
 #bed
 bed.teleport: teleporting to bed location
