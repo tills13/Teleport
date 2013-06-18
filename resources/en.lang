@@ -102,6 +102,7 @@ teleport.help.general: help with other commands
 #requests
 requests.list.title: %s pending requests:
 requests.yourlocation: your location
+requests.player: player
 
 #bed
 bed.teleport: teleporting to bed location

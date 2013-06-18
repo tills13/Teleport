@@ -35,6 +35,7 @@ public class Config {
 	}
 
 	public void init() {
+		if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
 		File teleportConfig = new File(this.configPath);
 		if (teleportConfig.exists()) {
 			try {

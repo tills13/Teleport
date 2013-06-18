@@ -2,6 +2,7 @@ package com.jseb.teleport;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 import java.io.BufferedReader;
@@ -72,8 +73,13 @@ public class Language {
 
 		if (plugin.getSettings().cacheLanguage) load();
 		if (!langFile.exists()) {
-			System.out.println("[Teleport] language file not found, aborting");
-			plugin.getServer().getPluginManager().disablePlugin(plugin);
+			plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
+				public void run() {
+					System.out.println("[Teleport] language file not found, disabling");
+					System.out.println("[Teleport] please place a valid language file in Teleport's data folder");
+					plugin.getServer().getPluginManager().disablePlugin(plugin);
+				}
+			}, 20 * 2);
 		}
 	}
 }
