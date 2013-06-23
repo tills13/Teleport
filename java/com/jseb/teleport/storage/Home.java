@@ -21,7 +21,7 @@ public class Home {
 	public static Map<String, List<Home>> homeList = new HashMap<String, List<Home>>();
 
 	public Home(String owner, String name, Location location) {
-		this.owner = owner;
+		this.owner = owner.toLowerCase();
 		this.name = name;
 		this.isDefault = false;
 		this.location = location;
@@ -135,7 +135,7 @@ public class Home {
 	}
 
 	public static List<Home> getHomes(String owner) {
-		return homeList.get(owner);
+		return homeList.get(owner.toLowerCase());
 	}
 
 	public static int numHomes(Player owner) {

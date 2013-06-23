@@ -14,6 +14,7 @@ public class Area {
 	private String author;
 	private boolean requirePermission;
 	private Location location;
+	private String alias;
 
 	public static List<Area> areaList = new ArrayList<Area>();
 
@@ -22,6 +23,7 @@ public class Area {
 		this.location = location;
 		this.author = "";
 		this.requirePermission = false;
+		this.alias = "";
 
 		areaList.add(this);
 	}
@@ -36,10 +38,17 @@ public class Area {
 		this.requirePermission = requirePermission;
 	}
 
+	public Area(String name, Location location, String author, boolean requirePermission, String alias) {
+		this(name, location, author, requirePermission);
+		this.alias = alias;
+	}
+
 	public Area(String name, Location location, boolean requirePermission) {
 		this(name, location);
 		this.requirePermission = requirePermission;
 	}
+
+	// ---------
 
 	public Location getLocation() {
 		return this.location;
@@ -57,6 +66,15 @@ public class Area {
 		this.requirePermission = requirePermission;
 	}
 
+	public boolean setAlias(String alias) {
+		if (getAreaByAlias(alias) == null) {
+			this.alias = alias;
+			return true;
+		}
+
+		return false;
+	}
+
 	public String getName() {
 		return this.name;
 	}
@@ -71,6 +89,10 @@ public class Area {
 
 	public String getPermissionString() {
 		return requirePermission ? "teleport.area.teleport." + this.name : "none";
+	}
+
+	public String getAlias() {
+		return this.alias;
 	}
 
 	public void rename(String newname) {
@@ -109,6 +131,16 @@ public class Area {
 	public static Area getArea(String name) {
 		for (Area area : areaList) {
 			if (area.getName().equals(name)) {
+				return area;
+			}
+		}
+
+		return null;
+	}
+
+	public static Area getAreaByAlias(String alias) {
+		for (Area area : areaList) {
+			if (area.getAlias().equals(alias)) {
 				return area;
 			}
 		}

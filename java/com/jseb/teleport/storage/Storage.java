@@ -130,7 +130,7 @@ public class Storage {
 	public void loadAreas() {
 		Double x = 0.0, y = 0.0, z = 0.0;
 		float pitch = 0, yaw = 0;
-		String name = "", list[], s, author = "";
+		String name = "", list[], s, author = "", alias = "";
 		World world = null;
 		boolean permission = false;
 
@@ -180,6 +180,7 @@ public class Storage {
 						else if (s.startsWith("yaw: ")) yaw = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
 						else if (s.startsWith("pitch: ")) pitch = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
 						else if (s.startsWith("permission: ")) permission = Boolean.parseBoolean(s.substring(s.indexOf(":") + 2, s.length()));
+						else if (s.startsWith("alias: ")) alias = s.substring(s.indexOf(":") + 2, s.length());
 						
 						s = br.readLine();
 						if (s == null) break;
@@ -188,7 +189,7 @@ public class Storage {
 					if ((world == null) || (name == "")) {
 						System.out.println("[TH] something went wrong loading areas");
 					} else {
-						new Area(name, new Location(world, x, y, z, yaw, pitch), author, permission);
+						new Area(name, new Location(world, x, y, z, yaw, pitch), author, permission, alias);
 					}	
 				}
 			}
@@ -278,6 +279,7 @@ public class Storage {
 	            br.write("yaw: " + location.getYaw() + "\n");
 	            br.write("pitch: " + location.getPitch() + "\n");
 	            br.write("permission: " + area.getPermission() + "\n");
+	            br.write("alias: " + area.getAlias() + "\n");
 	            br.flush();
 	   		}
 

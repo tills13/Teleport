@@ -110,7 +110,9 @@ public class HomeCommand implements CommandExecutor {
 		    	player = (Player) sender;
 
 		    	if (Home.numHomes(player) > 0) {
-					Home home = Home.getHome(player, args[1]);
+		    		Home home = null;
+		    		if (args.length == 1) home = Home.getDefault(player);
+		    		else if (args.length == 2) home = Home.getHome(player, args[1]);
 
 					if (home != null) {
 						home.delete();
