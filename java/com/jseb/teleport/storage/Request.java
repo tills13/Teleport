@@ -121,6 +121,7 @@ public class Request {
 	}
 
 	public static Request getRequest(Player target, String mrequester) {
+		if (mrequester.equalsIgnoreCase("")) return getRequest(target);
 		if (numRequests(target) == 0 || requests == null) {
 			return null;
 		} else {

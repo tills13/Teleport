@@ -37,6 +37,7 @@ public class BedCommand implements CommandExecutor {
     	}
 
 		Location bedLocation = player.getBedSpawnLocation();
+		
 		if (bedLocation == null) {
 			player.sendMessage(Language.getString("plugin.title") + Language.getString("error.bed.bednotfound"));
 		} else {

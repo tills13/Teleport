@@ -43,9 +43,9 @@ public class Language {
 		}
 	}
 
-	/*public static String getFormattedString(String title, Object ... args) {
-		String.format(getString(title), args);
-	}*/
+	public static String getFormattedString(String title, String ... args) {
+		return String.format(getString(title), args);
+	}
 
 	public static void load() {
 		BufferedReader reader;
@@ -55,6 +55,7 @@ public class Language {
 		try {
 			reader = new BufferedReader(new FileReader(langFile));
 			string = reader.readLine().toLowerCase();
+			
 			while (string != null) {
 				if (string.indexOf(":") > 0) stringList.put(string.substring(0, string.indexOf(":")), string.substring(string.indexOf(":") + 2, string.length()));
 				string = reader.readLine().toLowerCase();

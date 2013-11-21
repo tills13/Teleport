@@ -31,11 +31,9 @@ public class Storage {
 	public Storage(Teleport plugin) {
 		this.back = new HashMap<Player, Location>(); 
 		this.deathLocations = new HashMap<Player, Location>();
-		//possibly create directory (plugin.getDataFolder()) if it doesn't already exist.
-		String filePath = plugin.getDataFolder().getAbsolutePath();
+		String filePath = plugin.getDataFolder().getAbsolutePath(); //possibly create directory (plugin.getDataFolder()) if it doesn't already exist.
 
 		this.plugin = plugin;
-
 		this.homeFile = new File(filePath + File.separator + "home-locations.bin");
 		this.areaFile = new File(filePath + File.separator + "area-locations.bin");
 
@@ -52,8 +50,7 @@ public class Storage {
 		boolean isDefault = false;
 
 		try {
-			BufferedReader br;
-			br  = new BufferedReader(new FileReader(homeFile));
+			BufferedReader br = new BufferedReader(new FileReader(homeFile));
 
 			s = br.readLine();
 			if (s == null) return;
@@ -237,9 +234,8 @@ public class Storage {
 		            br.write("z: " + location.getZ() + "\n");
 		            br.write("yaw: " + location.getYaw() + "\n");
 		            br.write("pitch: " + location.getPitch() + "\n");
-		            br.write("isDefault: " + home.isDefault + "\n");
+		            br.write("isDefault: " + home.getIsDefault() + "\n");
 		            //br.write("residents: ");
-		            //br.write("isDefault: ");
 		            br.flush();
 		        }
 	   		}

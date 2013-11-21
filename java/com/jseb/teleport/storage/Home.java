@@ -16,8 +16,8 @@ public class Home {
 	private String name;
 	private Location location;
 	private List<String> residents;
+	private boolean isDefault;
 
-	public boolean isDefault;
 	public static Map<String, List<Home>> homeList = new HashMap<String, List<Home>>();
 
 	public Home(String owner, String name, Location location) {
@@ -27,13 +27,8 @@ public class Home {
 		this.location = location;
 		
 
-		List<Home> ownersHomes;
-
-		ownersHomes = homeList.get(owner);
-
-		if (ownersHomes == null) {
-			ownersHomes = new ArrayList<Home>();
-		}
+		List<Home> ownersHomes = homeList.get(owner);
+		if (ownersHomes == null) ownersHomes = new ArrayList<Home>();
 
 		ownersHomes.add(this);
 		homeList.put(owner, ownersHomes);
@@ -41,9 +36,7 @@ public class Home {
 
 	public Home(String owner, String name, Location location, boolean isDefault) {
 		this(owner, name, location);
-		if (isDefault) {
-			this.makeDefault();
-		}
+		if (isDefault) this.makeDefault();
 	}
 
 	public void addResident(String player) {
@@ -95,6 +88,10 @@ public class Home {
 
 	public List<String> getResidents() {
 		return this.residents;
+	}
+
+	public boolean getIsDefault() {
+		return this.isDefault;
 	}
 
 	public boolean isResident(Player player) {

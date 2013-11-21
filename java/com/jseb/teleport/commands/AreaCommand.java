@@ -29,9 +29,8 @@ public class AreaCommand implements CommandExecutor {
 
         Player player;
 
-        if (args.length == 0) {
-           helpSyntax(sender);
-        } else {
+        if (args.length == 0) helpSyntax(sender);
+        else {
             if (args[0].equalsIgnoreCase("list")) {
                 int page = 1, end;
                 end = Area.numAreas();

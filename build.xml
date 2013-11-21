@@ -1,0 +1,30 @@
+<project name="Teleport" default="dist" basedir=".">
+  <!-- set global properties for this build -->
+  <property name="src" location="java"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="rsc"  location="resources"/>
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source " >
+    <javac srcdir="${src}" source="1.6" target="1.6" verbose="true" destdir="${build}"/>
+  </target>
+
+  <target name="move" depends="compile" description="moves files into place" >
+    <copy file="${rsc}/plugin.yml" todir="${build}"/>
+    <copy file="${rsc}/en.lang" todir="${build}"/>
+  </target>
+
+  <target name="dist" depends="compile,move" description="generate the distribution" >
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/Teleport.jar" basedir="${build}"/>
+  </target>
+
+  <target name="clean" description="clean up" >
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>

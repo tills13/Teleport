@@ -3,7 +3,7 @@ plugin.title: [&cTH&f] &a
 #general
 general.waitforauth: waiting for authorization...
 general.teleport: teleporting to %s
-general.teleport.help: type [/accept] to allow or [/deny] to deny
+general.teleport.help: type [/request accept] to allow or [/request deny] to deny
 general.teleport.request: %s wishes to teleport to %s
 general.config.reload: config. reloaded
 general.updateavail: an update for this plugin is available on bukkitdev
@@ -52,6 +52,7 @@ teleport.request.denied.target: denied %s's teleport request
 
 #areas
 area.teleport: teleporting to &f%s
+area.update.alias: updated alias for %s
 area.update.location: updated %s's location
 area.update.permission: updated permissions for &f%s
 area.update.locationandpermission: updated %s's location, permissions
@@ -61,14 +62,17 @@ area.remove: removed &f%s
 area.rename: &f%s&a renamed to &f%s&a
 area.list.title: Areas: [Page &f%d&a of &f%d&a]
 area.info.about: about: &f%s
+area.info.alias: alias: &f%s
 area.info.location: location: &f%s
 area.info.author: author: &f%s
 area.info.permission: permission: &f%s
 area.help.set: sets a new area, optional permission requirement
 area.help.setperms: sets area permissions
+area.help.setalias: sets area alias
 area.help.remove: removes an area
 area.help.rename: renames an area to <new name>
 area.help.teleport: teleports to an area
+area.help.teleporta: teleports to an area by alias
 area.help.list: lists areas
 
 #home

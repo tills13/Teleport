@@ -28,6 +28,7 @@ public class DeathCommand implements CommandExecutor {
 
     	if (!(sender instanceof Player)) {
     		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
+    		return true;
     	}
 
     	Player player = (Player) sender;
@@ -37,11 +38,8 @@ public class DeathCommand implements CommandExecutor {
 			return true;
     	}
 
-		if (plugin.getStorage().deathLocations.containsKey(player)) {
-			player.teleport(plugin.getStorage().deathLocations.remove(player));
-		} else {
-			player.sendMessage(Language.getString("plugin.title") + Language.getString("error.death.nolocation"));
-		}
+		if (plugin.getStorage().deathLocations.containsKey(player)) player.teleport(plugin.getStorage().deathLocations.remove(player));
+		else player.sendMessage(Language.getString("plugin.title") + Language.getString("error.death.nolocation"));
 
 		return true;
     }

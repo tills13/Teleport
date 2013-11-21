@@ -21,6 +21,7 @@ public class Teleport extends JavaPlugin {
     private Storage storage;
     
 	public void onEnable() {
+		saveResource("en.lang", true);
 		storage = new Storage(this);
 		settings = new Config(getConfig(), this);
 		updater = new Updater(this);
@@ -31,7 +32,7 @@ public class Teleport extends JavaPlugin {
 		init();
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this); // register event listener
 		BukkitScheduler scheduler = getServer().getScheduler();
-		scheduler.runTaskLater(this, updater, 20);
+		scheduler.runTaskLaterAsynchronously(this, updater, 20);
 	}
 
 	public void onDisable() {
@@ -55,8 +56,6 @@ public class Teleport extends JavaPlugin {
 	public void init() {
 		getCommand("home").setExecutor(new HomeCommand(this));
 		getCommand("spawn").setExecutor(new SpawnCommand(this));
-        getCommand("accept").setExecutor(new RequestReplyCommand(this));
-        getCommand("deny").setExecutor(new RequestReplyCommand(this));
         getCommand("request").setExecutor(new RequestReplyCommand(this));
         getCommand("back").setExecutor(new BackCommand(this));
         getCommand("teleport").setExecutor(new TeleportCommand(this));

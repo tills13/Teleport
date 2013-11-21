@@ -208,7 +208,7 @@ public class HomeCommand implements CommandExecutor {
 						int i = 1;
 						for (Home home: list) {
 							String message = "   " + ChatColor.GREEN + i++ + ". " + ChatColor.WHITE + home.getName();
-							if (home.isDefault) message += " " + Language.getString("home.list.isdefault");
+							if (home.getIsDefault()) message += " " + Language.getString("home.list.isdefault");
 							message += " (" + (int)home.getLocation().getX() + ", " + (int)home.getLocation().getY() + ", " + (int)home.getLocation().getZ() + ")";
 							player.sendMessage(message);
 						}
@@ -242,7 +242,7 @@ public class HomeCommand implements CommandExecutor {
 					int i = 1;
 					for (Home home: list) {
 						String message = "   " + ChatColor.GREEN + i++ + ". " + ChatColor.WHITE + home.getName();
-						if (home.isDefault) message += " " + Language.getString("home.list.isdefault");
+						if (home.getIsDefault()) message += " " + Language.getString("home.list.isdefault");
 						message += " (" + (int)home.getLocation().getX() + ", " + (int)home.getLocation().getY() + ", " + (int)home.getLocation().getZ() + ")";
 						sender.sendMessage(message);
 					}

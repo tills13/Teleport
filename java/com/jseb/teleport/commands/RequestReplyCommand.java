@@ -49,64 +49,35 @@ public class RequestReplyCommand implements CommandExecutor {
 				if (Request.numRequests(player) > 0) {
 					sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("requests.list.title"), player.getName()));
 					int i = 1;
-					for (Request mrequest : Request.getRequests(player)) {
-						sender.sendMessage(Language.getString("plugin.title") + "  " + i++  + ". " + ChatColor.WHITE + mrequest.requester.getName() + " (" + ((mrequest.destination instanceof Home) ? ((Home)mrequest.destination).getName() : Language.getString("requests.player")) + ")");
-					}
-				} else {
-					sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.request.norequests"));
+					for (Request mrequest : Request.getRequests(player)) sender.sendMessage(Language.getString("plugin.title") + "  " + i++  + ". " + ChatColor.WHITE + mrequest.requester.getName() + " (" + ((mrequest.destination instanceof Home) ? ((Home)mrequest.destination).getName() : Language.getString("requests.player")) + ")");
+				} else sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.request.norequests"));
+			} else if (args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("deny")) {
+				if (!(sender instanceof Player)) {
+					sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
+					return true;
 				}
-			} else {
-				helpSyntax(sender);
-			}
 
+				player = (Player) sender;
+				Request request = Request.getRequest(player, args.length == 1 ? "" : args[1]);
+				System.out.println("test");
+
+				if (request == null && Request.numRequests(player) != 0) player.sendMessage(Language.getString("plugin.title") + (args.length == 1 ? Language.getString("error.request.multiplerequests") : Language.getString("error.request.requestnotfound")));
+				else if (Request.numRequests(player) == 0) player.sendMessage(Language.getString("plugin.title") + Language.getString("error.request.norequests"));
+				else {
+					if (args[0].equalsIgnoreCase("accept")) request.accept();
+					else request.deny();
+				}
+			} else helpSyntax(sender);
+			
 			return true;
 		}
-
-		if (!(sender instanceof Player)) {
-			sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
-			return true;
-		}
-
-		player = (Player) sender;
-		Request request = null;
-
-		if (args.length == 0) {
-			request = Request.getRequest(player);
-
-			if (request == null && Request.numRequests(player) != 0) {
-				player.sendMessage(Language.getString("plugin.title") + Language.getString("error.request.multiplerequests"));
-				return true;
-			} else if (Request.numRequests(player) == 0) {
-				player.sendMessage(Language.getString("plugin.title") + Language.getString("error.request.norequests"));
-				return true;
-			} 
-		} else if (args.length == 1) {
-			request = Request.getRequest(player, args[0]);
-
-			if (request == null && Request.numRequests(player) != 0) {
-				player.sendMessage(Language.getString("plugin.title") + Language.getString("error.request.requestnotfound"));
-				return true;
-			} else if (Request.numRequests(player) == 0) {
-				player.sendMessage(Language.getString("plugin.title") + Language.getString("error.request.norequests"));
-				return true;
-			}
-		} else {
-			helpSyntax(sender);
-			return true;
-		}
-
-		if (cmd.getName().equalsIgnoreCase("accept")) {
-			request.accept();
-		} else if (cmd.getName().equalsIgnoreCase("deny")) {
-			request.deny();
-		} 
 
 		return true;
 	}
 
 	public void helpSyntax(CommandSender player) {
-    	player.sendMessage(Language.getString("plugin.title") + "[/request], [/accept], [/deny] " + ChatColor.WHITE + Language.getString("general.commandhelp.title"));
-    	player.sendMessage(Language.getString("plugin.title") + "[/accept] or [/deny]" + ChatColor.WHITE + Language.getString("general.teleport.help"));
+    	player.sendMessage(Language.getString("plugin.title") + "[/request] " + ChatColor.WHITE + Language.getString("general.commandhelp.title"));
+    	player.sendMessage(Language.getString("plugin.title") + "[/request accept] or [/request deny]" + ChatColor.WHITE + Language.getString("general.teleport.help"));
     	player.sendMessage(Language.getString("plugin.title") + "[/request list <player>]" + ChatColor.WHITE + Language.getString("general.teleport.help"));
     	player.sendMessage(Language.getString("plugin.title") + "[/teleport], [/home], and [/area] " + ChatColor.WHITE + Language.getString("teleport.help.general"));
     }

@@ -3,8 +3,7 @@ package com.jseb.teleport;
 import com.jseb.teleport.Language;
 
 import org.bukkit.scheduler.BukkitRunnable;
- 	
-import java.net.HttpURLConnection;
+
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
@@ -28,21 +27,15 @@ public class Updater extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (enabled) {
-			checkForUpdates();
-		}
+		if (enabled) checkForUpdates();
 	}
 
 	public void checkForUpdates() {
-		if (getPluginVersion() < getRemoteVersion()) {
-			this.notify = true;
-			return;
-		} 
-
-		this.notify = false;
+		if (getLocalVersion() < getRemoteVersion()) this.notify = true;
+		else this.notify = false;
 	}
 
-	public double getPluginVersion() {
+	public double getLocalVersion() {
 		return Double.parseDouble(this.plugin.getDescription().getVersion());
 	}
 
@@ -59,13 +52,12 @@ public class Updater extends BukkitRunnable {
 			
 			while(in.hasNext()) {
 				String s = in.next();
-				if (s.contains("file-type")) {
-					read = true;
-				}
+				if (s.contains("file-type")) read = true;
 				if ((s.contains("/server-mods/teleport-home/files/") && read)) {
 					s = in.next();
 					matcher = pattern.matcher(s);
 					matcher.find();
+					
 					try {
 						return Double.parseDouble(matcher.group(1));
 					} catch (IllegalStateException e) {
