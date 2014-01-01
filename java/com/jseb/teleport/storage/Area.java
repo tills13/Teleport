@@ -2,50 +2,31 @@ package com.jseb.teleport.storage;
 
 import com.jseb.teleport.TeleportHelper;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 
 public class Area {
 	private String name;
-	private String author;
-	private boolean requirePermission;
+	private String owner;
+	private boolean permissions;
 	private Location location;
 	private String alias;
 
-	public static List<Area> areaList = new ArrayList<Area>();
-
-	public Area(String name, Location location) {
+	protected Area(String name, Location location, String owner, boolean permissions, String alias) {
 		this.name = name;
 		this.location = location;
-		this.author = "";
-		this.requirePermission = false;
-		this.alias = "";
-
-		areaList.add(this);
-	}
-
-	public Area(String name, Location location, String author) {
-		this(name, location);
-		this.author = author;
-	}
-
-	public Area(String name, Location location, String author, boolean requirePermission) {
-		this(name, location, author);
-		this.requirePermission = requirePermission;
-	}
-
-	public Area(String name, Location location, String author, boolean requirePermission, String alias) {
-		this(name, location, author, requirePermission);
+		this.owner = owner;
+		this.permissions = false;
 		this.alias = alias;
-	}
-
-	public Area(String name, Location location, boolean requirePermission) {
-		this(name, location);
-		this.requirePermission = requirePermission;
+		this.permissions = permissions;
 	}
 
 	// ---------
@@ -54,16 +35,16 @@ public class Area {
 		return this.location;
 	}
 
-	public String getLocationString() {
-		return "(" + (int)this.location.getX() + ", " + (int)this.location.getY() + ", " + (int)this.location.getZ() + ")";
-	}
-
-	public void setLocation(Location location) {
+	public void setLocation(Location location) { 
 		this.location = location;
 	}
 
-	public void setPermissions(boolean requirePermission) {
-		this.requirePermission = requirePermission;
+	public boolean getPermission() {
+		return this.permissions;
+	}
+
+	public void setPermissions(boolean permissions) {
+		this.permissions = permissions;
 	}
 
 	public boolean setAlias(String alias) {
@@ -79,33 +60,37 @@ public class Area {
 		return this.name;
 	}
 
-	public String getAuthor() {
-		return this.author;
+	public void setName(String newName) {
+		TeleportHelper.getConfig("areas.yml").set(this.name, newName);
 	}
 
-	public boolean getPermission() {
-		return this.requirePermission;
+	public String getOwner() {
+		return this.owner;
+	}
+
+	public void setOwner(String owner) {
+		TeleportHelper.getConfig("areas.yml").set(this.name + ".owner", owner);
+	}
+
+	public void delete() {
+		TeleportHelper.getConfig("areas.yml").set(this.name + ".", null);
 	}
 
 	public String getPermissionString() {
-		return requirePermission ? "teleport.area.teleport." + this.name : "none";
+		return permissions ? "teleport.area.teleport." + this.name : "none";
 	}
 
 	public String getAlias() {
 		return this.alias;
 	}
 
-	public void rename(String newname) {
-		this.name = newname;
+	public String getLocationString() {
+		return "(" + (int)this.location.getX() + ", " + (int)this.location.getY() + ", " + (int)this.location.getZ() + ")";
 	}
 
-	public boolean delete() {
-		return areaList.remove(this);
-	}
-
-	public boolean canTeleportTo(CommandSender player) {
-		if (this.requirePermission) {
-			if (!(player.hasPermission("teleport.area.teleport." + this.name) || (player.hasPermission("teleport.area.teleport"))) && !player.getName().equalsIgnoreCase(this.author)) {
+	public boolean canTeleportTo(Player player) {
+		if (this.permissions) {
+			if (!(player.hasPermission("teleport.area.teleport." + this.name) || (player.hasPermission("teleport.area.teleport"))) && !player.getName().equalsIgnoreCase(this.owner)) {
 				return false;
 			}
 		}
@@ -114,45 +99,74 @@ public class Area {
 	}
 
 	public boolean teleportTo(Player player) {
-		if (this.requirePermission) {
-			if (!player.hasPermission("teleport.area.teleport." + this.name) && !player.getName().equalsIgnoreCase(this.author)) {
-				return false;
-			}
-		}
-
-		TeleportHelper.loadChunkAt(this.getLocation());
-		player.teleport(this.getLocation());
-		return true;
+		if (canTeleportTo(player)) {
+			TeleportHelper.loadChunkAt(this.getLocation());
+			player.teleport(this.getLocation());
+			return true;
+		} else return false;
 	}
 
 
 	//STATIC MEMBER FUNCTIONS
 
-	public static Area getArea(String name) {
-		for (Area area : areaList) {
-			if (area.getName().equals(name)) {
-				return area;
-			}
-		}
+	public static Area newArea(String owner, String name, String alias, Location location, boolean permissions) {
+		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+		String path = name + ".";
 
-		return null;
+		areas.set(path + "owner", owner);
+		areas.set(path + "alias", alias);
+		areas.set(path + "location.x", location.getX());
+		areas.set(path + "location.y", location.getY());
+		areas.set(path + "location.z", location.getZ());
+		areas.set(path + "location.pitch", location.getPitch());
+		areas.set(path + "location.yaw", location.getYaw());
+		areas.set(path + "location.world", location.getWorld());
+		areas.set(path + "permissions", permissions);
+		return getArea(name);
+	}
+
+	public static Area getArea(String name) {
+		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+		Map areaList = areas.getValues(true);
+
+		if (areas.contains(name)) {
+			String path = name + ".";
+			World world = Bukkit.getWorld(areas.getString(path + "location.world"));
+			int x = areas.getInt(path + "location.x");
+			int y = areas.getInt(path + "location.y");
+			int z = areas.getInt(path + "location.z");
+			int yaw = areas.getInt(path + "location.yaw");
+			int pitch = areas.getInt(path + "location.pitch");
+			Location location = new Location(world, x, y, z, yaw, pitch);
+
+			String owner = areas.getString(path + "owner");
+			String alias = areas.getString(path + "alias");
+			boolean permissions = areas.getBoolean(path + "permissions");
+			return new Area(name, location, owner, permissions, alias);
+		} else return null;
+	}
+
+	public static boolean areaExists(String name) {
+		return getArea(name) != null;
 	}
 
 	public static Area getAreaByAlias(String alias) {
-		for (Area area : areaList) {
-			if (area.getAlias().equals(alias)) {
-				return area;
-			}
-		}
+		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+		Map<String, Object> areaList = areas.getValues(true);
 
+		for (String area : areaList.keySet()) if (areas.contains(area + "." + alias)) return getArea(area);
 		return null;
 	}
 
 	public static int numAreas() {
-		return areaList.size();
+		return TeleportHelper.getConfig("areas.yml").getValues(true).size();
 	}
 
-	public static Object[] toArray() {
-		return areaList.toArray();
+	public static ArrayList<Area> getAreaList() {
+		Map<String, Object> areas = TeleportHelper.getConfig("areas.yml").getValues(true);
+		ArrayList<Area> areaList = new ArrayList<Area>();
+
+		for (String area : areas.keySet()) areaList.add(getArea(area));
+		return areaList;
 	}
 }

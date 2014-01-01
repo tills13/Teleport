@@ -52,6 +52,7 @@ public class AreaCommand implements CommandExecutor {
                 }
 
                 sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.list.title"), page, (int)Math.ceil(Area.numAreas() / 5.0)));
+                Area[] areas = (Area[]) Area.getAreaList().toArray();
 
                 int j = 0;
                 for (int i = ((page - 1) * 5); i < end; i++) {
@@ -59,7 +60,7 @@ public class AreaCommand implements CommandExecutor {
                         break;
                     }
 
-                    Area area = (Area)Area.toArray()[i];
+                    Area area = areas[i];
                     String message = "   " + ChatColor.GREEN + (i + 1) + ". " + ChatColor.WHITE + area.getName();
                     if (!area.getAlias().equals("")) message += " [" + area.getAlias() + "] ";
                     if (area.canTeleportTo(sender)) message += " (" + (int)area.getLocation().getX() + ", " + (int)area.getLocation().getY() + ", " + (int)area.getLocation().getZ() + ")";

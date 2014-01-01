@@ -25,10 +25,11 @@ public class Teleport extends JavaPlugin {
 		storage = new Storage(this);
 		settings = new Config(getConfig(), this);
 		updater = new Updater(this);
-		Language.setPlugin(this);
+		Language.plugin = this;
+		Request.plugin = this;
+		TeleportHelper.plugin = this;
 		Language.reload();
-		Request.setPlugin(this);
-
+		
 		init();
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this); // register event listener
 		BukkitScheduler scheduler = getServer().getScheduler();

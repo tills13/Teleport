@@ -65,10 +65,6 @@ public class Language {
 		}
 	}
 
-	public static void setPlugin(Teleport teleport) {
-		plugin = teleport;
-	}
-
 	public static void reload() {
 		langFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + plugin.getSettings().lang + ".lang");
 
