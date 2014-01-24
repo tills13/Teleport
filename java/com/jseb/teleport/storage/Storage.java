@@ -2,6 +2,8 @@ package com.jseb.teleport.storage;
 
 import com.jseb.teleport.Teleport;
 
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.World;
@@ -19,34 +21,26 @@ import java.io.File;
 import java.io.IOException;
 
 public class Storage {
-	public Map<Player, Location> back;
-	public Map<Player, Map<Player, Home>> homeAccept; 
-	public Map<Player, Player> playerAccept; 
-	public Map<Player, Location> deathLocations;
+	private static Map<Player, Location> back = new HashMap<Player, Location>(); ;
+	private static Map<Player, Location> deaths = new HashMap<Player, Location>();;
 
 	private File homeFile;
 	private File areaFile;
-	private Teleport plugin;
 
-	public Storage(Teleport plugin) {
-		this.back = new HashMap<Player, Location>(); 
-		this.deathLocations = new HashMap<Player, Location>();
+	public Storage(JavaPlugin plugin) {
 		String filePath = plugin.getDataFolder().getAbsolutePath(); //possibly create directory (plugin.getDataFolder()) if it doesn't already exist.
-
-		this.plugin = plugin;
 		this.homeFile = new File(filePath + File.separator + "home-locations.bin");
 		this.areaFile = new File(filePath + File.separator + "area-locations.bin");
 
-		loadHomes();
-		loadAreas();
+		//if (homeFile.exists()) LEGACYHOMES();
+		//if (areaFile.exists()) LEGACYAREAS();
 	}
 
-	public void loadHomes() {
+	public void LEGACYHOMES() {
 		Double x = 0.0, y = 0.0, z = 0.0;
 		float pitch = 0, yaw = 0;
-		String name = "", list[], s, owner = "";
+		String name = "", s, owner = "";
 		World world = null;
-		List<Home> homes;
 		boolean isDefault = false;
 
 		try {
@@ -55,79 +49,36 @@ public class Storage {
 			s = br.readLine();
 			if (s == null) return;
 
-			if (!s.contains("home: ")) {
-				//old format
-
-				while (s != null) {
-					list = s.split(" ");
-					if (list.length != 3) {
-						for (int i = 2; i < list.length - 1; i++) {
-							list[1] += " " + list[i];
-						}
-
-						list[2] = list[list.length - 1];
-					}
-
-					String lstring[] = list[1].split(",");
-
-					if (list.length >= 3) {
-						name = list[2];
-					} else {
-						name = "temp";
-					}
-
-					world = plugin.getServer().getWorld(lstring[0].substring(lstring[0].lastIndexOf("=") + 1, lstring[0].length() - 1));
-					x = Double.parseDouble(lstring[1].substring(lstring[1].indexOf("=") + 1, lstring[1].length()));
-					y = Double.parseDouble(lstring[2].substring(lstring[2].indexOf("=") + 1, lstring[2].length()));
-					z = Double.parseDouble(lstring[3].substring(lstring[3].indexOf("=") + 1, lstring[3].length()));
-					pitch = Float.parseFloat(lstring[4].substring(lstring[4].indexOf("=") + 1, lstring[4].length()));
-					yaw = Float.parseFloat(lstring[5].substring(lstring[5].indexOf("=") + 1, lstring[5].length() - 1));
-
-					new Home(list[0], name, new Location(world, x, y, z, yaw, pitch), false);
-
+			while (s != null) {
+				do {
+					if (s.startsWith("home: ")) name = s.substring(s.indexOf(":") + 2, s.length());
+					else if (s.startsWith("owner: ")) owner = s.substring(s.indexOf(":") + 2, s.length()).toLowerCase().trim();
+					else if (s.startsWith("world: ")) world = Bukkit.getServer().getWorld(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("x: ")) x = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("y: ")) y = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("z: ")) z = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("yaw: ")) yaw = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("pitch: ")) pitch = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("isDefault: ")) isDefault = Boolean.parseBoolean(s.substring(s.indexOf(":") + 2, s.length()));
+					
 					s = br.readLine();
-				}
+					if (s == null) break;
+				} while (!(s.startsWith("home: ")));
 
-				br.close();
-			} else {
-				//new format
-
-				while (s != null) {
-					do {
-						if (s.startsWith("home: ")) name = s.substring(s.indexOf(":") + 2, s.length());
-						else if (s.startsWith("owner: ")) owner = s.substring(s.indexOf(":") + 2, s.length()).toLowerCase().trim();
-						else if (s.startsWith("world: ")) world = plugin.getServer().getWorld(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("x: ")) x = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("y: ")) y = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("z: ")) z = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("yaw: ")) yaw = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("pitch: ")) pitch = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("isDefault: ")) isDefault = Boolean.parseBoolean(s.substring(s.indexOf(":") + 2, s.length()));
-						
-						s = br.readLine();
-						if (s == null) break;
-					} while (!(s.startsWith("home: ")));
-
-					if ((world == null) || (owner == "") || (name == "")) {
-						System.out.println("[Teleport] something went wrong loading homes");
-					} else {
-						new Home(owner, name, new Location(world, x, y, z, yaw, pitch), isDefault);
-					}	
-				}
-
-				br.close();
+				if ((world == null) || (owner == "") || (name == "")) System.out.println("[Teleport] something went wrong porting homes");
+				else Home.newHome(owner, name, new Location(world, x, y, z, yaw, pitch), isDefault);
 			}
-		} catch(ArrayIndexOutOfBoundsException e) {
-			
-		} catch(IOException e) {
 
+			br.close();
+		} catch(ArrayIndexOutOfBoundsException e) {
+		} catch(IOException e) {
 		}
 	}
 
-	public void loadAreas() {
+	public void LEGACYAREAS() {
 		Double x = 0.0, y = 0.0, z = 0.0;
 		float pitch = 0, yaw = 0;
-		String name = "", list[], s, author = "", alias = "";
+		String name = "", list[], s, owner = "", alias = "";
 		World world = null;
 		boolean permission = false;
 
@@ -138,57 +89,25 @@ public class Storage {
 			s = br.readLine();
 			if (s == null) return;
 
-			if (!s.contains("area: ")) {
-				while (s != null) {
-					list = s.split(" ");
-					if (list.length != 2) {
-						for (int i = 2; i < list.length; i++) {
-							list[1] += " " + list[i];
-						}
-					}
-
-					String lstring[] = list[1].split(",");
-					name = list[0];
-
+			while (s != null) {
+				do {
+					if (s.startsWith("area: ")) name = s.substring(s.indexOf(":") + 2, s.length());
+					else if (s.startsWith("author: ")) owner = s.substring(s.indexOf(":") + 2, s.length()).toLowerCase().trim();
+					else if (s.startsWith("world: ")) world = Bukkit.getServer().getWorld(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("x: ")) x = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("y: ")) y = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("z: ")) z = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("yaw: ")) yaw = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("pitch: ")) pitch = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("permission: ")) permission = Boolean.parseBoolean(s.substring(s.indexOf(":") + 2, s.length()));
+					else if (s.startsWith("alias: ")) alias = s.substring(s.indexOf(":") + 2, s.length());
 					
-
-					world = plugin.getServer().getWorld(lstring[0].substring(lstring[0].lastIndexOf("=") + 1, lstring[0].length() - 1));
-					x = Double.parseDouble(lstring[1].substring(lstring[1].indexOf("=") + 1, lstring[1].length()));
-					y = Double.parseDouble(lstring[2].substring(lstring[2].indexOf("=") + 1, lstring[2].length()));
-					z = Double.parseDouble(lstring[3].substring(lstring[3].indexOf("=") + 1, lstring[3].length()));
-					pitch = Float.parseFloat(lstring[4].substring(lstring[4].indexOf("=") + 1, lstring[4].length()));
-					yaw = Float.parseFloat(lstring[5].substring(lstring[5].indexOf("=") + 1, lstring[5].length() - 1));
-
-					new Area(name, new Location(world, x, y, z, yaw, pitch));
-
 					s = br.readLine();
-				}
-			} else {
-				//new format
+					if (s == null) break;
+				} while (!(s.startsWith("area: ")));
 
-				while (s != null) {
-					do {
-						if (s.startsWith("area: ")) name = s.substring(s.indexOf(":") + 2, s.length());
-						else if (s.startsWith("author: ")) author = s.substring(s.indexOf(":") + 2, s.length()).toLowerCase().trim();
-						else if (s.startsWith("world: ")) world = plugin.getServer().getWorld(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("x: ")) x = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("y: ")) y = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("z: ")) z = Double.parseDouble(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("yaw: ")) yaw = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("pitch: ")) pitch = Float.parseFloat(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("permission: ")) permission = Boolean.parseBoolean(s.substring(s.indexOf(":") + 2, s.length()));
-						else if (s.startsWith("alias: ")) alias = s.substring(s.indexOf(":") + 2, s.length());
-						
-						s = br.readLine();
-						if (s == null) break;
-					} while (!(s.startsWith("area: ")));
-
-					if ((world == null) || (name == "")) {
-						System.out.println("[TH] something went wrong loading areas");
-					} else {
-						new Area(name, new Location(world, x, y, z, yaw, pitch), author, permission, alias);
-					}	
-				}
+				if ((world == null) || (name == "")) System.out.println("[TH] something went wrong loading areas");
+				else Area.newArea(name, owner, (alias == "") ? name : alias, new Location(world, x, y, z, yaw, pitch), permission);
 			}
 
 			br.close();
@@ -197,91 +116,19 @@ public class Storage {
 		}
 	}
 
-	/*
-		home: <name>
-		owner: <owner>
-		world: <world>
-		x: <x>
-		y: <y>
-		z: <z>
-		yaw: <yaw>
-		pitch: <pitch>
-		residents: <resident list>
-		isDefault: <isDefault boolean>
-	*/
-
-	public void saveHomes() {
-		try {
-			BufferedWriter br;
-	    	br  = new BufferedWriter(new FileWriter(homeFile));
-	    	List<Home> list;
-
-	    	Iterator<String> players = Home.homeList.keySet().iterator();
-
-	   		while (players.hasNext()) {
-	        	String player = players.next();
-	        	list = Home.homeList.get(player);
-
-	        	Iterator<Home> homes = list.iterator();
-	       		while (homes.hasNext()) {
-		            Home home = homes.next();
-		            Location location = home.getLocation();
-		            br.write("home: " + home.getName() + "\n");
-		            br.write("owner: " + home.getOwner().toLowerCase() + "\n");
-		            br.write("world: " + location.getWorld().getName() + "\n");
-		            br.write("x: " + location.getX() + "\n");
-		            br.write("y: " + location.getY() + "\n");
-		            br.write("z: " + location.getZ() + "\n");
-		            br.write("yaw: " + location.getYaw() + "\n");
-		            br.write("pitch: " + location.getPitch() + "\n");
-		            br.write("isDefault: " + home.getIsDefault() + "\n");
-		            //br.write("residents: ");
-		            br.flush();
-		        }
-	   		}
-
-	    	br.close();
-		} catch (IOException e) {
-
-		}
+	public static void saveDeathLocation(Player player, Location location) {
+		deaths.put(player, location);
 	}
 
-	/*
-		area: <name>
-		world: <world>
-		x: <x>
-		y: <y>
-		z: <z>
-		yaw: <yaw>
-		pitch: <pitch>
-	*/
+	public static Location getDeathLocation(Player player) {
+		return deaths.get(player);
+	}
 
-	public void saveAreas() {
-		try {
-			BufferedWriter br;
-	    	br  = new BufferedWriter(new FileWriter(areaFile));
+	public static void saveBackLocation(Player player, Location location) {
+		back.put(player, location);
+	}
 
-	    	Iterator<Area> areaIt = Area.areaList.iterator();
-
-	   		while (areaIt.hasNext()) {
-	        	Area area = areaIt.next();
-	        	Location location = area.getLocation();
-	        	br.write("area: " + area.getName() + "\n");
-	        	br.write("author: " + area.getAuthor() + "\n");
-	            br.write("world: " + location.getWorld().getName() + "\n");
-	            br.write("x: " + location.getX() + "\n");
-	            br.write("y: " + location.getY() + "\n");
-	            br.write("z: " + location.getZ() + "\n");
-	            br.write("yaw: " + location.getYaw() + "\n");
-	            br.write("pitch: " + location.getPitch() + "\n");
-	            br.write("permission: " + area.getPermission() + "\n");
-	            br.write("alias: " + area.getAlias() + "\n");
-	            br.flush();
-	   		}
-
-	    	br.close();
-		} catch (IOException e) {
-
-		}
+	public static Location getBackLocation(Player player) {
+		return back.get(player);
 	}
 }

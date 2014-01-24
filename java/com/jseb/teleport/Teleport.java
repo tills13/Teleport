@@ -22,7 +22,7 @@ public class Teleport extends JavaPlugin {
     
 	public void onEnable() {
 		saveResource("en.lang", true);
-		storage = new Storage(this);
+		storage = new Storage();
 		settings = new Config(getConfig(), this);
 		updater = new Updater(this);
 		Language.plugin = this;
@@ -37,9 +37,7 @@ public class Teleport extends JavaPlugin {
 	}
 
 	public void onDisable() {
-		storage.saveAreas();
-		storage.saveHomes();
-		settings.saveConfig();
+		//settings.saveConfig();
 	}
 
 	public Config getSettings() {
@@ -57,7 +55,7 @@ public class Teleport extends JavaPlugin {
 	public void init() {
 		getCommand("home").setExecutor(new HomeCommand(this));
 		getCommand("spawn").setExecutor(new SpawnCommand(this));
-        getCommand("request").setExecutor(new RequestReplyCommand(this));
+        getCommand("request").setExecutor(new RequestCommand());
         getCommand("back").setExecutor(new BackCommand(this));
         getCommand("teleport").setExecutor(new TeleportCommand(this));
         getCommand("area").setExecutor(new AreaCommand(this)); 

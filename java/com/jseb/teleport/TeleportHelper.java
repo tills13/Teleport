@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+import java.util.List;
 
 public class TeleportHelper {
 	public static Teleport plugin;
@@ -23,7 +24,15 @@ public class TeleportHelper {
 	public static YamlConfiguration getConfig(String name) {
 		InputStream defConfigStream = plugin.getResource(name);
 		if (defConfigStream != null) return YamlConfiguration.loadConfiguration(defConfigStream);
-		else return null;
+		else {
+			try {
+				File saveFile = new File(plugin.getDataFolder(), name);
+				saveFile.createNewFile();
+				return YamlConfiguration.loadConfiguration(saveFile);
+			} catch (IOException e) {
+				return null;
+			}
+		}
 	}
 
 	public static void saveConfig(String name, YamlConfiguration config) {
@@ -36,5 +45,13 @@ public class TeleportHelper {
 		} catch (IOException e) {
 
 		}
+	}
+
+	public static String listToString(List<String> list) {
+		StringBuffer sb = new StringBuffer();
+		int index = 0;
+		for (String string : list) sb.append(((index == 0) ? "[" : "") + string + (++index == list.size() ? "]" : ", "));
+
+		return sb.toString();
 	}
 }

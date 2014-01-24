@@ -81,10 +81,10 @@ public class Config {
 			return false;
 		}
 
+		this.projectName = config.getString("donttouch.projectname", "teleport-home");
 		this.maxHomes = config.getInt("general.maxhomes", 4);
 		this.notifyUpdate = config.getBoolean("general.updatenotify", true);
 		this.updateEnabled = config.getBoolean("general.updateenabled", false);
-		this.projectName = config.getString("donttouch.projectname", "teleport-home");
 		this.lang = config.getString("language.language", "en");
 		this.cacheLanguage = config.getBoolean("language.cache", false);
 

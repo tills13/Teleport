@@ -44,7 +44,8 @@ public class Language {
 	}
 
 	public static String getFormattedString(String title, String ... args) {
-		return String.format(getString(title), args);
+		//return String.format(getString(title), args);
+		return "";
 	}
 
 	public static void load() {

@@ -35,21 +35,40 @@ public class Area {
 		return this.location;
 	}
 
-	public void setLocation(Location location) { 
-		this.location = location;
+	public void setLocation(Location newLocation) {
+		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+		this.location = newLocation;
+
+		areas.set(this.name + ".location.x", newLocation.getX());
+		areas.set(this.name + ".location.y", newLocation.getY());
+		areas.set(this.name + ".location.z", newLocation.getZ());
+		areas.set(this.name + ".location.pitch", newLocation.getPitch());
+		areas.set(this.name + ".location.yaw", newLocation.getYaw());
+		areas.set(this.name + ".location.world", newLocation.getWorld().getName());
+		TeleportHelper.saveConfig("areas.yml", areas);
 	}
 
 	public boolean getPermission() {
 		return this.permissions;
 	}
 
-	public void setPermissions(boolean permissions) {
-		this.permissions = permissions;
+	public void setPermissions(boolean newPermissions) {
+		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+		this.permissions = newPermissions;
+		areas.set(this.name + ".permissions", newPermissions);
+		TeleportHelper.saveConfig("areas.yml", areas);	
 	}
 
-	public boolean setAlias(String alias) {
-		if (getAreaByAlias(alias) == null) {
-			this.alias = alias;
+	public String getAlias() {
+		return this.alias;
+	}
+
+	public boolean setAlias(String newAlias) {
+		if (getAreaByAlias(newAlias) == null) {
+			YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+			this.alias = newAlias;
+			areas.set(this.name + ".alias", newAlias);
+			TeleportHelper.saveConfig("areas.yml", areas);
 			return true;
 		}
 
@@ -61,27 +80,31 @@ public class Area {
 	}
 
 	public void setName(String newName) {
-		TeleportHelper.getConfig("areas.yml").set(this.name, newName);
+		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+		areas.set(newName, areas.getConfigurationSection(this.name));
+		areas.set(this.name, null);
+		TeleportHelper.saveConfig("areas.yml", areas);
 	}
 
 	public String getOwner() {
 		return this.owner;
 	}
 
-	public void setOwner(String owner) {
-		TeleportHelper.getConfig("areas.yml").set(this.name + ".owner", owner);
+	public void setOwner(String newOwner) {
+		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+		this.owner = newOwner;
+		areas.set(this.name + ".owner", owner);
+		TeleportHelper.saveConfig("areas.yml", areas);
 	}
 
 	public void delete() {
-		TeleportHelper.getConfig("areas.yml").set(this.name + ".", null);
+		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
+		areas.set(this.name, null);
+		TeleportHelper.saveConfig("areas.yml", areas);
 	}
 
 	public String getPermissionString() {
 		return permissions ? "teleport.area.teleport." + this.name : "none";
-	}
-
-	public String getAlias() {
-		return this.alias;
 	}
 
 	public String getLocationString() {
@@ -98,17 +121,15 @@ public class Area {
 		return true;
 	}
 
-	public boolean teleportTo(Player player) {
+	public void teleportTo(Player player) {
 		if (canTeleportTo(player)) {
+			Storage.saveBackLocation(player, player.getLocation());
 			TeleportHelper.loadChunkAt(this.getLocation());
 			player.teleport(this.getLocation());
-			return true;
-		} else return false;
+		} else return;
 	}
 
-
 	//STATIC MEMBER FUNCTIONS
-
 	public static Area newArea(String owner, String name, String alias, Location location, boolean permissions) {
 		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
 		String path = name + ".";
@@ -120,14 +141,15 @@ public class Area {
 		areas.set(path + "location.z", location.getZ());
 		areas.set(path + "location.pitch", location.getPitch());
 		areas.set(path + "location.yaw", location.getYaw());
-		areas.set(path + "location.world", location.getWorld());
+		areas.set(path + "location.world", location.getWorld().getName());
 		areas.set(path + "permissions", permissions);
+
+		TeleportHelper.saveConfig("areas.yml", areas);
 		return getArea(name);
 	}
 
 	public static Area getArea(String name) {
 		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
-		Map areaList = areas.getValues(true);
 
 		if (areas.contains(name)) {
 			String path = name + ".";
@@ -147,23 +169,23 @@ public class Area {
 	}
 
 	public static boolean areaExists(String name) {
-		return getArea(name) != null;
+		return TeleportHelper.getConfig("areas.yml").contains(name);
 	}
 
 	public static Area getAreaByAlias(String alias) {
 		YamlConfiguration areas = TeleportHelper.getConfig("areas.yml");
-		Map<String, Object> areaList = areas.getValues(true);
+		Map<String, Object> areaList = areas.getValues(false);
 
-		for (String area : areaList.keySet()) if (areas.contains(area + "." + alias)) return getArea(area);
+		for (String area : areaList.keySet()) if (areas.getString(area + ".alias").equals(alias)) return getArea(area);
 		return null;
 	}
 
 	public static int numAreas() {
-		return TeleportHelper.getConfig("areas.yml").getValues(true).size();
+		return TeleportHelper.getConfig("areas.yml").getValues(false).size();
 	}
 
 	public static ArrayList<Area> getAreaList() {
-		Map<String, Object> areas = TeleportHelper.getConfig("areas.yml").getValues(true);
+		Map<String, Object> areas = TeleportHelper.getConfig("areas.yml").getValues(false);
 		ArrayList<Area> areaList = new ArrayList<Area>();
 
 		for (String area : areas.keySet()) areaList.add(getArea(area));

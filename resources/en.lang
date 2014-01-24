@@ -20,14 +20,16 @@ error.featuredisabled: this feature has been disabled
 error.unknownargument: unknown argument: &f%s
 error.playermustbeonline: the player must be online
 error.playernotfound: could not find player &f%s
-error.area.permission: you do not have the required permission: %s
+error.area.permission: you do not have the required permission: &f%s
 error.area.noareassaved: no areas saved
 error.area.nosucharea: no area named&f %s
 error.area.permission: you do not have the required permission: &f%s
+error.area.aliasinuse: alias already in use
 error.back.nolocation: no previous location saved
 error.death.nolocation: something went wrong saving your location
 error.home.maxhomes: maximum of %d homes on this server
-error.home.list.help: try %s
+error.home.list.help: try &f%s
+error.home.permission: you do not have permission to teleport to that home
 error.home.nosuchhome: no home named &f%s
 error.home.nosuchhome.other: %s has no home named &f%s
 error.home.nohomessaved.other: no homes saved for &f%s
@@ -35,14 +37,15 @@ error.home.nohomessaved: no homes saved
 error.home.nodefaulthome: no default home saved
 error.home.nodefaulthome.other: no default home saved for &f%s
 error.home.homenotfound: home not found
+error.home.alreadyexists: a home with that name already exists
 error.bed.bednotfound: bed not found (may have been broken)
 error.request.norequests: no requests pending
 error.request.multiplerequests: multiple requests pending
 error.request.requestnotfound: no pending requests from that player
 
 #teleport
-teleport.otherhome.player: teleporting to %s's home <%s>
-teleport.otherhome.owner: teleporting %s to your home <%s>
+teleport.otherhome.player: teleporting to %s's home &f<%s>
+teleport.otherhome.owner: teleporting %s to your home &f<%s>
 teleport.spawn: teleporting to spawn
 teleport.player.player: teleporting to &f%s
 teleport.player.target: teleporting &f%s&a to you
@@ -52,7 +55,7 @@ teleport.request.denied.target: denied %s's teleport request
 
 #areas
 area.teleport: teleporting to &f%s
-area.update.alias: updated alias for %s
+area.update.alias: updated alias for &f%s
 area.update.location: updated %s's location
 area.update.permission: updated permissions for &f%s
 area.update.locationandpermission: updated %s's location, permissions
@@ -64,8 +67,9 @@ area.list.title: Areas: [Page &f%d&a of &f%d&a]
 area.info.about: about: &f%s
 area.info.alias: alias: &f%s
 area.info.location: location: &f%s
-area.info.author: author: &f%s
+area.info.author: owner: &f%s
 area.info.permission: permission: &f%s
+area.info.protected: [protected]
 area.help.set: sets a new area, optional permission requirement
 area.help.setperms: sets area permissions
 area.help.setalias: sets area alias
@@ -76,16 +80,25 @@ area.help.teleporta: teleports to an area by alias
 area.help.list: lists areas
 
 #home
+home.notify.isdefault: this home is your default home
 home.default.saved: default home location saved
 home.location.update: updated %s's location
 home.location.saved: home location saved
 home.newdefault: %s is now your default home
+home.residentadded: %s added as a resident
+home.residentaddednotice: %s added you as a resident of %s
+home.residentremoved: %s removed as a resident
+home.residentremovednotice: %s removed you as a resident of %s
 home.remove: removed &f%s
 home.rename: &f%s&a renamed to &f%s&a
-home.teleport: teleporting to %s
+home.teleport: teleporting to &f%s
 home.list.title.self: my homes
 home.list.title.other: %s's homes
 home.list.isdefault: (default)
+home.info.about: about: &f%s 
+home.info.owner: owner: &f%s
+home.info.location: location: &f%s
+home.info.residents: residents: &f%s
 home.help.set: sets a new home/optionally default
 home.help.setdefault: sets home as default
 home.help.remove: removes a home

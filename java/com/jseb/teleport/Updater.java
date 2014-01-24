@@ -40,33 +40,29 @@ public class Updater extends BukkitRunnable {
 	}
 
 	public double getRemoteVersion() {
+		Pattern pattern = Pattern.compile("v(\\d\\.\\d)");
+		boolean read = false;
+
 		try {
-			URLConnection connection;
-			URL url = new URL("http://dev.bukkit.org/server-mods/" + plugin.getSettings().projectName + "/");
-			connection = url.openConnection();
+			URLConnection connection = new URL("http://dev.bukkit.org/server-mods/" + plugin.getSettings().projectName + "/").openConnection();
 			InputStream is = connection.getInputStream();
 			Scanner in = new Scanner(is);
-			boolean read = false;
-			Pattern pattern = Pattern.compile("v(\\d\\.\\d)");
-			Matcher matcher;
 			
 			while(in.hasNext()) {
 				String s = in.next();
 				if (s.contains("file-type")) read = true;
 				if ((s.contains("/server-mods/teleport-home/files/") && read)) {
 					s = in.next();
-					matcher = pattern.matcher(s);
+					Matcher matcher = pattern.matcher(s);
 					matcher.find();
 					
-					try {
-						return Double.parseDouble(matcher.group(1));
-					} catch (IllegalStateException e) {
-						System.out.println("[Teleport] " + Language.getString("error.updater.check"));
-					}
+					return Double.parseDouble(matcher.group(1));
 				}
 			}
 		} catch (IOException e) {
 			System.out.println("[Teleport] " + Language.getString("error.updater.check"));
+		} catch (IllegalStateException e) {
+			
 		}
 
 		return 0;
