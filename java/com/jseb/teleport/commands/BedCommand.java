@@ -3,6 +3,7 @@ package com.jseb.teleport.commands;
 import com.jseb.teleport.Teleport;
 import com.jseb.teleport.TeleportHelper;
 import com.jseb.teleport.Language;
+import com.jseb.teleport.Config;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -19,33 +20,20 @@ public class BedCommand implements CommandExecutor {
 
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    	if (!plugin.getSettings().bedEnabled) {
-            sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
-            return true;
+    	if (!Config.getBoolean("components.bedenabled")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
+        else if (!(sender instanceof Player) || ((Player) sender).hasPermission("teleport.bed")) {
+            if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
+            else sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
+        } else {
+            Player player = (Player) sender;
+            Location location = player.getBedSpawnLocation();
+            
+            if (location != null) {
+                player.teleport(location);
+              	player.sendMessage(Language.getString("plugin.title") + Language.getString("bed.teleport"));
+            } else player.sendMessage(Language.getString("plugin.title") + Language.getString("error.bed.bednotfound"));
         }
 
-    	if (!(sender instanceof Player)) {
-    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
-    		return true;
-    	}
-
-    	Player player = (Player) sender;
-
-		if (!player.hasPermission("teleport.bed")) {
-			player.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
-			return true;
-    	}
-
-		Location bedLocation = player.getBedSpawnLocation();
-		
-		if (bedLocation == null) {
-			player.sendMessage(Language.getString("plugin.title") + Language.getString("error.bed.bednotfound"));
-		} else {
-			player.sendMessage(Language.getString("plugin.title") + Language.getString("bed.teleport"));
-			TeleportHelper.loadChunkAt(bedLocation);
-			player.teleport(bedLocation);
-		}
-
-		return true;
+        return true;
     }
 }

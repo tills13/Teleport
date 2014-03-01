@@ -22,7 +22,7 @@ public class Updater extends BukkitRunnable {
 	public Updater(Teleport plugin) {
 		this.plugin = plugin;
 		this.notify = false;
-		this.enabled = plugin.getSettings().updateEnabled;
+		this.enabled = Config.getBoolean("updateenabled");
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class Updater extends BukkitRunnable {
 		boolean read = false;
 
 		try {
-			URLConnection connection = new URL("http://dev.bukkit.org/server-mods/" + plugin.getSettings().projectName + "/").openConnection();
+			URLConnection connection = new URL("http://dev.bukkit.org/server-mods/" + Config.getString("projectname") + "/").openConnection();
 			InputStream is = connection.getInputStream();
 			Scanner in = new Scanner(is);
 			

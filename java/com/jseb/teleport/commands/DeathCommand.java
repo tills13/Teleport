@@ -2,6 +2,8 @@ package com.jseb.teleport.commands;
 
 import com.jseb.teleport.Teleport;
 import com.jseb.teleport.Language;
+import com.jseb.teleport.storage.Storage;
+import com.jseb.teleport.Config;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,26 +23,18 @@ public class DeathCommand implements CommandExecutor {
 
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-    	if (!plugin.getSettings().deathEnabled) {
-            sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
-            return true;
+    	if (!Config.getBoolean("components.deathenabled")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
+        else if (!(sender instanceof Player) || ((Player) sender).hasPermission("teleport.death")) {
+            if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
+            else sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
+        } else {
+            Player player = (Player) sender;
+            if (Storage.hasDeathLocation(player)) {
+                player.teleport(Storage.getDeathLocation(player));
+                player.sendMessage(Language.getString("plugin.title") + Language.getString("death.teleport"));
+            } else player.sendMessage(Language.getString("plugin.title") + Language.getString("error.death.nolocation"));
         }
 
-    	if (!(sender instanceof Player)) {
-    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
-    		return true;
-    	}
-
-    	Player player = (Player) sender;
-
-		if (!player.hasPermission("teleport.death")) {
-			player.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
-			return true;
-    	}
-
-		if (plugin.getStorage().deathLocations.containsKey(player)) player.teleport(plugin.getStorage().deathLocations.remove(player));
-		else player.sendMessage(Language.getString("plugin.title") + Language.getString("error.death.nolocation"));
-
-		return true;
+        return true;
     }
 }

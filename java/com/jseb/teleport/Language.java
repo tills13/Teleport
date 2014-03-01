@@ -1,5 +1,7 @@
 package com.jseb.teleport;
 
+import com.jseb.teleport.Teleport;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -13,7 +15,7 @@ import java.util.HashMap;
 
 public class Language {
 	public static File langFile;
-	public static Teleport plugin; 
+	public static Teleport plugin;
 	public static Map<String, String> stringList;
 
 	public static String getString(String title) {
@@ -67,17 +69,8 @@ public class Language {
 	}
 
 	public static void reload() {
-		langFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + plugin.getSettings().lang + ".lang");
+		langFile = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + Config.getString("language.language") + ".lang");
 
-		if (plugin.getSettings().cacheLanguage) load();
-		if (!langFile.exists()) {
-			plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-				public void run() {
-					System.out.println("[Teleport] language file not found, disabling");
-					System.out.println("[Teleport] please place a valid language file in Teleport's data folder");
-					plugin.getServer().getPluginManager().disablePlugin(plugin);
-				}
-			}, 20 * 2);
-		}
+		if (Config.getBoolean("language.cache")) load();
 	}
 }

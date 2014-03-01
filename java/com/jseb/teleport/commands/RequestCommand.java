@@ -5,6 +5,7 @@ import com.jseb.teleport.Teleport;
 import com.jseb.teleport.storage.Home;
 import com.jseb.teleport.storage.Request;
 import com.jseb.teleport.Language;
+import com.jseb.teleport.Config;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -27,7 +28,7 @@ public class RequestCommand implements CommandExecutor {
 			    		if (Request.numRequests(args.length == 2 ? args[1] : sender.getName()) > 0) {
 							sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("requests.list.title"), args.length == 2 ? args[1] : "your"));
 							int i = 1;
-							for (Request mRequest : Request.getRequests(args.length == 2 ? args[1] : sender.getName())) sender.sendMessage(Language.getString("plugin.title") + "  " + i++  + ". " + ChatColor.WHITE + mRequest.requester + " (" + ((mRequest.destination instanceof Home) ? ((Home) mRequest.destination).getName() : Language.getString("requests.player")) + ")");
+							for (Request mRequest : Request.getRequests(args.length == 2 ? args[1] : sender.getName())) sender.sendMessage(Language.getString("plugin.title") + "  " + i++  + ". " + ChatColor.WHITE + mRequest.requester + " (" + ((mRequest.destination instanceof Home) ? "home: " + ((Home) mRequest.destination).getName() : Language.getString("requests.player")) + ")");
 						} else sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.request.norequests"));
 			    	}
 				} else if (args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("deny")) {
@@ -52,8 +53,8 @@ public class RequestCommand implements CommandExecutor {
 
 	public void helpSyntax(CommandSender player) {
     	player.sendMessage(Language.getString("plugin.title") + "[/request] " + ChatColor.WHITE + Language.getString("general.commandhelp.title"));
-    	player.sendMessage(Language.getString("plugin.title") + "[/request accept] or [/request deny]" + ChatColor.WHITE + Language.getString("general.teleport.help"));
-    	player.sendMessage(Language.getString("plugin.title") + "[/request list <player>]" + ChatColor.WHITE + Language.getString("general.teleport.help"));
+    	player.sendMessage(Language.getString("plugin.title") + "[/request accept] or [/request deny] " + ChatColor.WHITE + Language.getString("general.teleport.help"));
+    	player.sendMessage(Language.getString("plugin.title") + "[/request list <player>] " + ChatColor.WHITE + Language.getString("requests.info.list"));
     	player.sendMessage(Language.getString("plugin.title") + "[/teleport], [/home], and [/area] " + ChatColor.WHITE + Language.getString("teleport.help.general"));
     }
 }

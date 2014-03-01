@@ -1,16 +1,17 @@
-<project name="Teleport" default="dist" basedir=".">
+<project name="Teleport" default="move2" basedir=".">
   <!-- set global properties for this build -->
   <property name="src" location="java"/>
   <property name="build" location="build"/>
   <property name="dist"  location="dist"/>
   <property name="rsc"  location="resources"/>
+  <property name="final"  location="/Users/tills13/MineCraft Server/plugins"/>
 
   <target name="init">
     <mkdir dir="${build}"/>
   </target>
 
   <target name="compile" depends="init" description="compile the source " >
-    <javac srcdir="${src}" source="1.6" target="1.6" verbose="false" destdir="${build}"/>
+    <javac srcdir="${src}" verbose="false" destdir="${build}"/>
   </target>
 
   <target name="move" depends="compile" description="moves files into place" >
@@ -22,6 +23,10 @@
     <mkdir dir="${dist}"/>
     <jar jarfile="${dist}/Teleport.jar" basedir="${build}"/>
   </target>
+
+    <target name="move2" depends="dist" description="moves files into place" >
+      <copy file="${dist}/Teleport.jar" todir="${final}"/>
+    </target>
 
   <target name="clean" description="clean up" >
     <delete dir="${build}"/>

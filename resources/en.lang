@@ -8,6 +8,7 @@ general.teleport.request: %s wishes to teleport to %s
 general.config.reload: config. reloaded
 general.updateavail: an update for this plugin is available on bukkitdev
 general.deathlocsave: saving your location, use [/death] to return
+general.backlocsave: saving your location, use [/back] to return
 general.syntax: syntax: %s
 general.commandhelp.title: &fcommand syntax: 
 
@@ -118,6 +119,7 @@ teleport.help.general: help with other commands
 
 #requests
 requests.list.title: %s pending requests:
+requests.info.list: type &a[/request list]&f to show pending requests
 requests.yourlocation: your location
 requests.player: player
 

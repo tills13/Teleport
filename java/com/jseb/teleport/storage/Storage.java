@@ -1,6 +1,7 @@
 package com.jseb.teleport.storage;
 
 import com.jseb.teleport.Teleport;
+import com.jseb.teleport.Language;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.Bukkit;
@@ -28,12 +29,18 @@ public class Storage {
 	private File areaFile;
 
 	public Storage(JavaPlugin plugin) {
-		String filePath = plugin.getDataFolder().getAbsolutePath(); //possibly create directory (plugin.getDataFolder()) if it doesn't already exist.
-		this.homeFile = new File(filePath + File.separator + "home-locations.bin");
-		this.areaFile = new File(filePath + File.separator + "area-locations.bin");
+		this.homeFile = new File(plugin.getDataFolder(), "home-locations.bin");
+		this.areaFile = new File(plugin.getDataFolder(), "area-locations.bin");
 
-		//if (homeFile.exists()) LEGACYHOMES();
-		//if (areaFile.exists()) LEGACYAREAS();
+		if (homeFile.exists()) {
+			LEGACYHOMES();
+			homeFile.delete();
+		}
+
+		if (areaFile.exists()) {
+			LEGACYAREAS();
+			areaFile.delete();
+		}
 	}
 
 	public void LEGACYHOMES() {
@@ -71,7 +78,9 @@ public class Storage {
 
 			br.close();
 		} catch(ArrayIndexOutOfBoundsException e) {
+			System.out.println("[TH] something went wrong loading homes");
 		} catch(IOException e) {
+			System.out.println("[TH] something went wrong loading areas");
 		}
 	}
 
@@ -107,16 +116,17 @@ public class Storage {
 				} while (!(s.startsWith("area: ")));
 
 				if ((world == null) || (name == "")) System.out.println("[TH] something went wrong loading areas");
-				else Area.newArea(name, owner, (alias == "") ? name : alias, new Location(world, x, y, z, yaw, pitch), permission);
+				else Area.newArea(owner, name, (alias == "") ? name : alias, new Location(world, x, y, z, yaw, pitch), permission);
 			}
 
 			br.close();
 		} catch (IOException e) {
-
+			System.out.println("[TH] something went wrong loading areas");
 		}
 	}
 
 	public static void saveDeathLocation(Player player, Location location) {
+		player.sendMessage(Language.getString("plugin.title") + Language.getString("general.deathlocsave"));
 		deaths.put(player, location);
 	}
 
@@ -124,11 +134,20 @@ public class Storage {
 		return deaths.get(player);
 	}
 
+	public static boolean hasDeathLocation(Player player) {
+		return deaths.containsKey(player);
+	}
+
 	public static void saveBackLocation(Player player, Location location) {
+		player.sendMessage(Language.getString("plugin.title") + Language.getString("general.backlocsave"));
 		back.put(player, location);
 	}
 
 	public static Location getBackLocation(Player player) {
 		return back.get(player);
+	}
+
+	public static boolean hasBackLocation(Player player) {
+		return back.containsKey(player);
 	}
 }

@@ -27,7 +27,11 @@ import java.util.Calendar;
 import java.text.SimpleDateFormat;
 
 public class Request {
-	public static Teleport plugin;
+	public static final String STATUS_ACTIVE = "active";
+	public static final String STATUS_ACCEPTED = "accepted";
+	public static final String STATUS_DENIED = "denied";
+	public static final String STATUS_EXPIRED = "expired";
+	public static final String STATUS_INVALID = "invalid";
 	public String id;
 	public String requester;
 	public String type;
@@ -36,12 +40,19 @@ public class Request {
 	public Object destination;
 
 	public Request(String id, String player, Object destination) {
-		this.id = id;
-		this.requester = player;
-		this.destination = destination;
-		this.type = (destination instanceof Home) ? "home" : "player";
-		this.target = ((destination instanceof Home) ? ((Home) destination).getName() : ((Player) destination).getName());
-		this.target_owner = (destination instanceof Home) ? ((Home) destination).getOwner() : "N/A";
+		try {
+			this.id = id;
+			this.requester = player;
+			this.destination = destination;
+			this.type = (destination instanceof Home) ? "home" : "player";
+			this.target = ((destination instanceof Home) ? ((Home) destination).getName() : ((Player) destination).getName());
+			this.target_owner = (destination instanceof Home) ? ((Home) destination).getOwner() : "N/A";
+		} catch (NullPointerException e) {
+			YamlConfiguration requests = TeleportHelper.getConfig("requests.yml");
+			requests.set("history." + this.id + ".status", STATUS_INVALID);
+			TeleportHelper.saveConfig("requests.yml", requests);
+			this.delete();
+		}
 	}
 
 	public String getID() {
@@ -64,38 +75,59 @@ public class Request {
 		return this.target_owner;
 	}
 
+	public String getStatus() {
+		return TeleportHelper.getConfig("requests.yml").getString("history." + getID() + ".status");
+	}
+
+	public void setStatus(String status) {
+		YamlConfiguration requests = TeleportHelper.getConfig("requests.yml");
+		requests.set("history." + getID() + ".status", status);
+		
+		TeleportHelper.saveConfig("requests.yml", requests);
+	}
+
 	public void accept() {
+		this.accept(false);
+	}
+
+	public void accept(boolean silent) {
 		Player mRequester = Bukkit.getServer().getPlayerExact(this.requester);
 		Player mTarget = Bukkit.getServer().getPlayerExact(this.type == "home" ? this.target_owner : this.target);
 
 		if (mRequester != null) {
 			Storage.saveBackLocation(mRequester, mRequester.getLocation());
-			mRequester.sendMessage(Language.getString("plugin.title") + "teleporting..."); //CHANGE
-			mTarget.sendMessage(Language.getString("plugin.title") + "teleporting " + this.requester + "..."); //CHANGE
-			if (this.type == "home") Home.getHome(this.target_owner, this.target).teleportTo(mRequester);
-			else mRequester.teleport(mTarget.getLocation());
-		} else mTarget.sendMessage(Language.getString("plugin.title") + this.requester + " appears to have gone offline...");
-		
-		//requester.sendMessage( + String.format(Language.getString("teleport.player.player"), target.getName()));
-		//target.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.player.target"), requester.getName()));
-	
-		//requester.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.otherhome.player"), target.getName(), home.getName()));
-		//target.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.otherhome.owner"), requester.getName(), home.getName()));
 
-		removeRequest();
+			if (this.type == "home") {
+				mRequester.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.otherhome.player"), mTarget.getName(), ((Home) this.destination).getName()));
+				mTarget.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.otherhome.owner"), mRequester.getName(), ((Home) this.destination).getName()));
+				Home.getHome(this.target_owner, this.target).teleportTo(mRequester);
+			} else {
+				mRequester.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.player.player"), mTarget.getName()));
+				mTarget.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.player.target"), mRequester.getName()));
+				mRequester.teleport(mTarget.getLocation());
+			}
+		} else mTarget.sendMessage(Language.getString("plugin.title") + this.requester + " appears to have gone offline...");
+	
+		this.setStatus(STATUS_ACCEPTED);
+		this.delete();
 	}
 
 	public void deny() {
+		this.deny(false);
+	}
+
+	public void deny(boolean silent) {
 		Player mRequester = Bukkit.getServer().getPlayerExact(this.requester);
 		Player mTarget = Bukkit.getServer().getPlayerExact(this.type == "home" ? this.target_owner : this.target);
 
-		if (mRequester != null) mRequester.sendMessage(Language.getString("plugin.title") + Language.getString("teleport.request.denied.player"));
-		if (mTarget != null) mTarget.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.request.denied.target"), requester));
+		if (mRequester != null && !silent) mRequester.sendMessage(Language.getString("plugin.title") + Language.getString("teleport.request.denied.player"));
+		if (mTarget != null && !silent) mTarget.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.request.denied.target"), requester));
 
-		removeRequest();
+		this.setStatus(STATUS_DENIED);
+		this.delete();
 	}
 
-	public void removeRequest() {
+	public void delete() {
 		YamlConfiguration requests = TeleportHelper.getConfig("requests.yml");
 		requests.set("requests." + this.id, null);
 
@@ -105,26 +137,25 @@ public class Request {
 	//STATIC METHODS
 	public static Request makeRequest(String player, Object destination) {
 		YamlConfiguration requests = TeleportHelper.getConfig("requests.yml");
-		YamlConfiguration requesthistory = TeleportHelper.getConfig("requesthistory.yml");
 
 		long id =  System.currentTimeMillis();
 		String time = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(Calendar.getInstance().getTime()).toString();
-		String path = "requests." + id + ".";
 
-		requests.set(path + id + ".requester", player);
-		requests.set(path + id + ".requested_at", time);
-		requests.set(path + id + ".type", (destination instanceof Home) ? "home" : "player");
-		requests.set(path + id + ".target", ((destination instanceof Home) ? ((Home) destination).getName() : ((Player) destination).getName()));
-		requests.set(path + id + ".target_owner", ((destination instanceof Home) ? ((Home) destination).getOwner() : ((Player) destination).getName()));
+		String path = "requests." + id;
+		requests.set(path + ".requester", player);
+		requests.set(path + ".requested_at", time);
+		requests.set(path + ".type", (destination instanceof Home) ? "home" : "player");
+		requests.set(path + ".target", ((destination instanceof Home) ? ((Home) destination).getName() : ((Player) destination).getName()));
+		requests.set(path + ".target_owner", ((destination instanceof Home) ? ((Home) destination).getOwner() : ((Player) destination).getName()));
 
 		path = "history." + id;
-		requesthistory.set(path + ".from", player);
-		requesthistory.set(path + ".to", ((destination instanceof Home) ? "home" : "player") + " (" + ((destination instanceof Home) ? ((Home) destination).getName() : ((Player) destination).getName()) + ")");
-		requesthistory.set(path + ".on", time);
-		requesthistory.set(path + ".status", "active");
+		requests.set(path + ".from", player);
+		requests.set(path + ".to", ((destination instanceof Home) ? "home" : "player") + " (" + ((destination instanceof Home) ? ((Home) destination).getName() + " - " + ((Home) destination).getOwner() : ((Player) destination).getName()) + ")");
+		requests.set(path + ".at", time);
+		requests.set(path + ".status", "active");
 
 		TeleportHelper.saveConfig("requests.yml", requests);
-		TeleportHelper.saveConfig("requesthistory.yml", requesthistory);
+
 		Request request = getRequest(id);
 		notifyPlayers(request);
 		return request;
@@ -133,7 +164,6 @@ public class Request {
 	public static Request getRequest(long id) {
 		YamlConfiguration requests = TeleportHelper.getConfig("requests.yml");
 		if (requests.contains("requests." + id)) {
-			
 			return new Request(id + "", requests.getString("requests." + id + ".requester"), (requests.getString("requests." + id + ".type").equals("home") ? Home.getHome(requests.getString("requests." + id + ".target_owner"), requests.getString("requests." + id + ".target")) : Bukkit.getPlayerExact(requests.getString("requests." + id + ".target"))));
 		} else return null;
 	}
@@ -155,13 +185,24 @@ public class Request {
 		return null;
 	}
 
+	// shouldn't work...
 	public static List<Request> getRequests(String target) {
 		YamlConfiguration requests = TeleportHelper.getConfig("requests.yml");
-		Map<String, Object> requestList = requests.getValues(false);
+		Map<String, Object> requestList = requests.getConfigurationSection("requests").getValues(false);
 		List<Request> targetRequests = new ArrayList<Request>();
 
-		for (String request_id : requestList.keySet()) if (requests.getString(request_id + ".target_owner").equals(target)) targetRequests.add(getRequest(Long.parseLong(request_id)));
+		for (String request_id : requestList.keySet()) if (requests.getString("requests." + request_id + ".target_owner").equals(target)) targetRequests.add(getRequest(Long.parseLong(request_id)));
 		return targetRequests;
+	}
+
+	public void clearRequests(String target) {
+		for (Request request : getRequests(target)) {
+			if (request.getStatus() == STATUS_ACTIVE) request.deny(true);
+			else {
+				request.setStatus(STATUS_EXPIRED);
+				request.delete();
+			}
+		}
 	}
 
 	public static int numRequests(String target) {

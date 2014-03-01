@@ -3,7 +3,6 @@ package com.jseb.teleport;
 import com.jseb.teleport.Language;
 import com.jseb.teleport.commands.*;
 import com.jseb.teleport.storage.Storage;
-import com.jseb.teleport.storage.Request;
 import com.jseb.teleport.listeners.PlayerListener;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,13 +21,13 @@ public class Teleport extends JavaPlugin {
     
 	public void onEnable() {
 		saveResource("en.lang", true);
-		storage = new Storage();
-		settings = new Config(getConfig(), this);
-		updater = new Updater(this);
-		Language.plugin = this;
-		Request.plugin = this;
 		TeleportHelper.plugin = this;
+		Language.plugin = this;
+
+		storage = new Storage(this);
+		updater = new Updater(this);
 		Language.reload();
+		Config.load();
 		
 		init();
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this); // register event listener
@@ -38,14 +37,6 @@ public class Teleport extends JavaPlugin {
 
 	public void onDisable() {
 		//settings.saveConfig();
-	}
-
-	public Config getSettings() {
-		return this.settings;
-	}
-
-	public Storage getStorage() {
-		return this.storage;
 	}
 
 	public Updater getUpdater() {
@@ -59,7 +50,6 @@ public class Teleport extends JavaPlugin {
         getCommand("back").setExecutor(new BackCommand(this));
         getCommand("teleport").setExecutor(new TeleportCommand(this));
         getCommand("area").setExecutor(new AreaCommand(this)); 
-        getCommand("config").setExecutor(new ConfigCommand(this));
         getCommand("death").setExecutor(new DeathCommand(this));
         getCommand("bed").setExecutor(new BedCommand(this));
 	}
