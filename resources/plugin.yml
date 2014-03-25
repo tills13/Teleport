@@ -1,6 +1,6 @@
 name: Teleport
 main: com.jseb.teleport.Teleport
-version: 2.2
+version: 3.0
 author: tills13
 
 commands:
@@ -25,9 +25,6 @@ commands:
   death:
     description: teleport to where you died
     usage: '/<command>'
-  config:
-    description: reload the config file
-    usage: '/<command> reload'
   bed: 
     description: teleport to your bed location
     usage: '/<command>'

@@ -6,11 +6,6 @@ import com.jseb.teleport.storage.Storage;
 import com.jseb.teleport.listeners.PlayerListener;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.Server;
-import org.bukkit.ChatColor;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 
@@ -31,8 +26,7 @@ public class Teleport extends JavaPlugin {
 		
 		init();
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this); // register event listener
-		BukkitScheduler scheduler = getServer().getScheduler();
-		scheduler.runTaskLaterAsynchronously(this, updater, 20);
+		getServer().getScheduler().runTaskLaterAsynchronously(this, updater, 20);
 	}
 
 	public void onDisable() {
