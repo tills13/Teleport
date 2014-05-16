@@ -133,3 +133,7 @@ back.teleport: teleporting back
 spawn.setspawn: setting spawn location &f%s
 spawn.help.spawn: teleports to spawn
 spawn.help.setspawn: sets the spawn location for the current world
+
+#send
+send.sendplayer: %s is teleporting you to %s
+send.sendsender: teleporting %s to %s

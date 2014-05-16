@@ -83,13 +83,32 @@ public class AreaCommand implements CommandExecutor {
                         if (area == null && Area.numAreas() != 0) player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.nosucharea"), args[1]));
                         else if (Area.numAreas() == 0) player.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.noareassaved"));
                         else {
-                            Storage.saveBackLocation(player, player.getLocation());
                             if (area.canTeleportTo(player)) {
                                 area.teleportTo(player);
                                 player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.teleport"), area.getName()));
                             } else player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.permission"), area.getPermissionString()));
                         }                       
                     }
+                } else if (args[0].equalsIgnoreCase("send")) {
+                    // area send <username> <area name>
+                    if (args.length == 3) {
+                        Area area = Area.getArea(args[2]);
+                        player = Bukkit.getServer().getPlayer(args[1]);
+                        if (player != null) {
+                             if (area == null && Area.numAreas() != 0) sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.nosucharea"), args[2]));
+                            else if (Area.numAreas() == 0) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.noareassaved"));
+                            else {
+                                if (area.canTeleportTo(player)) {
+                                    area.teleportTo(player);
+                                    player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("send.sendplayer"), sender.getName(), area.getName()));
+                                    sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("send.sendsender"), player.getName(), area.getName())); // change string
+                                } else sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.area.permission"), area.getPermissionString()));
+                            }  
+                        } else {
+                            sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.playernotfound"), args[1]));
+                            sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playermustbeonline"));     
+                        }
+                    } else helpSyntax(sender);
                 } else if (args[0].equalsIgnoreCase("set")) {
                     if (sender instanceof Player) {
                         player = (Player) sender;   

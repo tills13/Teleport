@@ -8,6 +8,7 @@ import com.jseb.teleport.storage.Storage;
 import com.jseb.teleport.Language;
 import com.jseb.teleport.Config;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -144,7 +145,22 @@ public class HomeCommand implements CommandExecutor {
 							home.teleportTo(player);
 						}
 			    	}
-				} else if (args[0].equalsIgnoreCase("rename")) {
+				} else if (args[0].equalsIgnoreCase("send")) {
+                    // home send <username> <area name>
+
+					Home home = (args.length == 2) ? Home.getDefaultHome(args[1]) : Home.getHome(args[1], args[2]);
+					player = Bukkit.getServer().getPlayer(args[1]);
+                    	
+					if (home == null && Home.numHomes(player.getName().toLowerCase()) != 0) {
+		    			if (args.length == 2) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.home.nodefaulthome"));
+		    			else sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.home.nosuchhome"), args[2]));
+					} else if (Home.numHomes(player.getName().toLowerCase()) == 0) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.home.nohomessaved"));
+					else {
+						player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("send.sendplayer"), sender.getName(), home.getName()));
+                        sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("send.sendsender"), player.getName(), home.getName())); // change string
+						home.teleportTo(player);
+					}
+                } else if (args[0].equalsIgnoreCase("rename")) {
 					if (!(sender instanceof Player)) {
 			    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 			    		return true;
@@ -193,15 +209,16 @@ public class HomeCommand implements CommandExecutor {
 
 							Home home = (args.length == 2) ? Home.getDefaultHome(((receiver != null) ? receiver.getName() : args[1]).toLowerCase()) : Home.getHome(((receiver != null) ? receiver.getName() : args[1]).toLowerCase(), args[2].toLowerCase());						System.out.println(home);
 							if (home != null && home.canTeleportTo(player.getName().toLowerCase())) {
-								Storage.saveBackLocation(player, player.getLocation());
 								player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.otherhome.player"), home.getOwner(), home.getName()));
 								if (receiver != null) receiver.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("teleport.otherhome.owner"), player.getName(), home.getName()));
 						
 								home.teleportTo(player);
 							} else {
 								if (home == null || receiver == null) {
-									if (receiver == null) player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.playernotfound"), args[1]));
-									if (receiver == null) player.sendMessage(Language.getString("plugin.title") + Language.getString("error.playermustbeonline"));
+									if (receiver == null) {
+										player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.playernotfound"), args[1]));
+										player.sendMessage(Language.getString("plugin.title") + Language.getString("error.playermustbeonline"));
+									}
 									if (home == null) player.sendMessage(String.format(Language.getString("plugin.title") + Language.getString("error.home.nosuchhome.other"), args[1], args[2]));
 								} else Request.makeRequest(player.getName(), home);
 							}

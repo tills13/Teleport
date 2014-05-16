@@ -21,7 +21,7 @@ public class BedCommand implements CommandExecutor {
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if (!Config.getBoolean("components.bedenabled")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
-        else if (!(sender instanceof Player) || ((Player) sender).hasPermission("teleport.bed")) {
+        else if (!(sender instanceof Player) || !((Player) sender).hasPermission("teleport.bed")) {
             if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
             else sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
         } else {

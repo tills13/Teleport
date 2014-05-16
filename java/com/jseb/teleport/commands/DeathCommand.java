@@ -24,7 +24,7 @@ public class DeathCommand implements CommandExecutor {
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
     	if (!Config.getBoolean("components.deathenabled")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.featuredisabled"));
-        else if (!(sender instanceof Player) || ((Player) sender).hasPermission("teleport.death")) {
+        else if (!(sender instanceof Player) || !((Player) sender).hasPermission("teleport.death")) {
             if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
             else sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
         } else {
