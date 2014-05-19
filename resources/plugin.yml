@@ -1,6 +1,6 @@
 name: Teleport
 main: com.jseb.teleport.Teleport
-version: 3.0
+version: 3.1
 author: tills13
 
 commands:
@@ -12,7 +12,7 @@ commands:
     usage: /<command>
   home:
     description: commands dealing with homes
-    usage: '/<command> [set <name> | teleport <name> | remove <name> | rename <name> <new name> | <player> <name> | list]'
+    usage: '/<command> [set <name> | send <player> <home> | teleport <name> | remove <name> | rename <name> <new name> | <player> <name> | list]'
   accept:
     description: authorize teleportation to your home or person
     usage: '/<command>'
@@ -21,7 +21,7 @@ commands:
     usage: '/<command> <player>'
   area:
     description: commands dealing with areas
-    usage: '/<command> [set <name> | [teleport | teleporta] <name | alias> | remove <name> | rename <name> <new name> | list]'
+    usage: '/<command> [set <name> | send <player> <area> | [teleport | teleporta] <name | alias> | remove <name> | rename <name> <new name> | list]'
   death:
     description: teleport to where you died
     usage: '/<command>'

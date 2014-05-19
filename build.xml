@@ -1,10 +1,10 @@
-<project name="Teleport" default="move2" basedir=".">
+<project name="Teleport" default="dist" basedir=".">
 	<!-- set global properties for this build -->
 	<property name="src" location="java"/>
 	<property name="build" location="build"/>
 	<property name="dist"  location="dist"/>
 	<property name="rsc"  location="resources"/>
-	<property name="final"  location="C:\Users\tills13\Desktop\plugins"/>
+	<property name="final"  location=""/>
 
 	<target name="init">
 		<mkdir dir="${build}"/>
@@ -22,10 +22,6 @@
 	<target name="dist" depends="compile,move" description="generate the distribution" >
 		<mkdir dir="${dist}"/>
 		<jar jarfile="${dist}/Teleport.jar" basedir="${build}"/>
-	</target>
-
-	<target name="move2" depends="dist" description="moves files into place" >
-		<copy file="${dist}/Teleport.jar" todir="${final}"/>
 	</target>
 
 	<target name="clean" description="clean up" >
