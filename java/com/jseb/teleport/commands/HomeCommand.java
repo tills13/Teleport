@@ -59,7 +59,7 @@ public class HomeCommand implements CommandExecutor {
 							} else player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.home.maxhomes"), Config.getInt("general.maxhomes")));
 						}
 			    	}
-				} else if (args[0].equalsIgnoreCase("setdefault")) {
+				} else if (args[0].equalsIgnoreCase("setdefault") || args[0].equalsIgnoreCase("def")) {
 					if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 			    	else {
 			    		player = (Player) sender;
@@ -76,7 +76,7 @@ public class HomeCommand implements CommandExecutor {
 							}
 						}
 			    	}
-				} else if (args[0].equalsIgnoreCase("addresident")) {
+				} else if (args[0].equalsIgnoreCase("addresident") || args[0].equalsIgnoreCase("addres")) {
 					if (!sender.hasPermission("teleport.sethome")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 			    	else if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 			    	else if (args.length < 2) helpSyntax(sender);
@@ -95,7 +95,7 @@ public class HomeCommand implements CommandExecutor {
 							} else player.sendMessage(Language.getString("plugin.title") + ((args.length == 3) ? String.format(Language.getString("error.home.nosuchhome"), args[1]) : Language.getString("error.home.nodefaulthome")));
 						} else player.sendMessage(Language.getString("plugin.title") + Language.getString("error.home.nohomessaved"));
 			    	}
-				} else if (args[0].equalsIgnoreCase("removeresident")) {
+				} else if (args[0].equalsIgnoreCase("removeresident") || args[0].equalsIgnoreCase("rmres")) {
 					if (!sender.hasPermission("teleport.sethome")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 			    	else if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 			    	else if (args.length < 2) helpSyntax(sender);
@@ -114,7 +114,7 @@ public class HomeCommand implements CommandExecutor {
 							} else player.sendMessage(Language.getString("plugin.title") + ((args.length == 3) ? String.format(Language.getString("error.home.nosuchhome"), args[1]) : Language.getString("error.home.nodefaulthome")));
 						} else player.sendMessage(Language.getString("plugin.title") + Language.getString("error.home.nohomessaved"));
 			    	}
-				} else if (args[0].equalsIgnoreCase("remove")) {
+				} else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("rm")) {
 					if (!sender.hasPermission("teleport.sethome")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 			    	else if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 			    	else {
@@ -129,7 +129,7 @@ public class HomeCommand implements CommandExecutor {
 							} else player.sendMessage(Language.getString("plugin.title") + ((args.length == 2) ? String.format(Language.getString("error.home.nosuchhome"), args[1]) : Language.getString("error.home.nodefaulthome")));
 						} else player.sendMessage(Language.getString("plugin.title") + Language.getString("error.home.nohomessaved"));
 			    	}
-				} else if (args[0].equalsIgnoreCase("teleport")) {
+				} else if (args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("tp")) {
 					if (!sender.hasPermission("teleport.teleport")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 			    	else if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 			    	else {
@@ -162,7 +162,7 @@ public class HomeCommand implements CommandExecutor {
 							home.teleportTo(player);
 						}
 					}
-                } else if (args[0].equalsIgnoreCase("rename")) {
+                } else if (args[0].equalsIgnoreCase("rename") || args[0].equalsIgnoreCase("rn")) {
 					if (!(sender instanceof Player)) {
 			    		sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 			    		return true;
@@ -183,7 +183,7 @@ public class HomeCommand implements CommandExecutor {
 							} else player.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.home.nosuchhome"), args[1]));
 						} else player.sendMessage(Language.getString("plugin.title") + Language.getString("error.home.nohomessaved"));
 					}
-				} else if (args[0].equalsIgnoreCase("list")) {
+				} else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("ls")) {
 					if (sender instanceof Player && !((Player) sender).hasPermission("teleport.list")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 					else if (!(sender instanceof Player) && args.length == 1) sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("error.home.list.help"), "[/home list <player name>]"));
 					else {
@@ -201,7 +201,7 @@ public class HomeCommand implements CommandExecutor {
 							sender.sendMessage(message);
 						}
 					}
-				} else if (args[0].equalsIgnoreCase("player")) {
+				} else if (args[0].equalsIgnoreCase("player") || args[0].equalsIgnoreCase("p")) {
 					if (!sender.hasPermission("teleport.otherhome")) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
 			    	else if (!(sender instanceof Player)) sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
 			    	else {

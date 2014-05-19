@@ -46,5 +46,15 @@ public class Teleport extends JavaPlugin {
         getCommand("area").setExecutor(new AreaCommand(this)); 
         getCommand("death").setExecutor(new DeathCommand(this));
         getCommand("bed").setExecutor(new BedCommand(this));
+
+        //aliases
+        getCommand("hm").setExecutor(new HomeCommand(this));
+		getCommand("sp").setExecutor(new SpawnCommand(this));
+        getCommand("r").setExecutor(new RequestCommand());
+        getCommand("back").setExecutor(new BackCommand(this));
+        getCommand("tp").setExecutor(new TeleportCommand(this));
+        getCommand("ar").setExecutor(new AreaCommand(this)); 
+        getCommand("death").setExecutor(new DeathCommand(this));
+        getCommand("bed").setExecutor(new BedCommand(this));
 	}
 }

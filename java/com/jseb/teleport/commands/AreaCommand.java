@@ -33,7 +33,7 @@ public class AreaCommand implements CommandExecutor {
 
             if (args.length == 0) helpSyntax(sender);
             else {
-                if (args[0].equalsIgnoreCase("list")) {
+                if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("ls")) {
                     int page = 1, end;
                     end = Area.numAreas();
 
@@ -68,7 +68,7 @@ public class AreaCommand implements CommandExecutor {
                         if ((sender instanceof Player) ? area.canTeleportTo((Player)sender) : true) message += " (" + (int)area.getLocation().getX() + ", " + (int)area.getLocation().getY() + ", " + (int)area.getLocation().getZ() + ")";
                         sender.sendMessage(message);
                     }
-                } else if (args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("teleporta")) {
+                } else if (args[0].equalsIgnoreCase("teleport") || args[0].equalsIgnoreCase("teleporta") || args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("tpa")) {
                     if (!(sender instanceof Player)) {
                         sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.playersonly"));
                         return true;
@@ -181,7 +181,7 @@ public class AreaCommand implements CommandExecutor {
                             else sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.area.aliasinuse"));
                         }
                     } else helpSyntax(sender);
-                } else if (args[0].equalsIgnoreCase("remove")) {
+                } else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("rm")) {
                     if (!sender.hasPermission("teleport.area.remove")) {
                         sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
                         return true;
@@ -198,7 +198,7 @@ public class AreaCommand implements CommandExecutor {
                             sender.sendMessage(Language.getString("plugin.title") + String.format(Language.getString("area.remove"), args[1])); 
                         }  
                     }
-                } else if (args[0].equalsIgnoreCase("rename")) {
+                } else if (args[0].equalsIgnoreCase("rename") || args[0].equalsIgnoreCase("rn")) {
                     if (!sender.hasPermission("teleport.area.rename")) {
                         sender.sendMessage(Language.getString("plugin.title") + Language.getString("error.permissiondenied"));
                         return true;
