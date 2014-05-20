@@ -7,10 +7,16 @@ commands:
   spawn:
     description: teleport to spawn
     usage: /<command>
+  sp:
+    description: teleport to spawn
+    usage: /<command>
   back:
     description: teleport to previous location
     usage: /<command>
   home:
+    description: commands dealing with homes
+    usage: '/<command> [set <name> | send <player> <home> | teleport <name> | remove <name> | rename <name> <new name> | <player> <name> | list]'
+  hm:
     description: commands dealing with homes
     usage: '/<command> [set <name> | send <player> <home> | teleport <name> | remove <name> | rename <name> <new name> | <player> <name> | list]'
   accept:
@@ -19,7 +25,13 @@ commands:
   teleport:
     description: teleport to another player
     usage: '/<command> <player>'
+  tp:
+    description: teleport to another player
+    usage: '/<command> <player>'
   area:
+    description: commands dealing with areas
+    usage: '/<command> [set <name> | send <player> <area> | [teleport | teleporta] <name | alias> | remove <name> | rename <name> <new name> | list]'
+  ar:
     description: commands dealing with areas
     usage: '/<command> [set <name> | send <player> <area> | [teleport | teleporta] <name | alias> | remove <name> | rename <name> <new name> | list]'
   death:
@@ -29,5 +41,8 @@ commands:
     description: teleport to your bed location
     usage: '/<command>'
   request: 
+    description: commands dealing with managing requests
+    usage: '/<command> [accept <name> | deny <name> | list]'
+  r: 
     description: commands dealing with managing requests
     usage: '/<command> [accept <name> | deny <name> | list]'
