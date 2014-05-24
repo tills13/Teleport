@@ -20,21 +20,15 @@ public class Teleport extends JavaPlugin {
 		Language.plugin = this;
 
 		storage = new Storage(this);
-		updater = new Updater(this);
 		Language.reload();
 		Config.load();
 		
 		init();
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this); // register event listener
-		getServer().getScheduler().runTaskLaterAsynchronously(this, updater, 20);
 	}
 
 	public void onDisable() {
 		//settings.saveConfig();
-	}
-
-	public Updater getUpdater() {
-		return this.updater;
 	}
 
 	public void init() {
